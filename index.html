@@ -535,7 +535,7 @@ function viewDashboard(){
 
   const ventasList=vendidasMes.length?vendidasMes.slice(0,4).map(s=>{const v=vehicle(s.vehicleId),c=client(s.clientId);return `<li><button data-act="viewVehicle" data-id="${s.vehicleId}"><span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${esc(c?c.nombre:'Cliente')} · ${fdateShort(s.fechaVenta)}</span></span><span class="num" style="font-weight:600">${moneyM(s.precio)}</span></button></li>`}).join(''):`<li class="mini-empty">Todavía no hay ventas cerradas este mes.</li>`;
 
-  const leadsList=nuevos.length?nuevos.slice(0,4).map(c=>`<li><button data-act="viewClient" data-id="${c.id}"><span class="stack"><strong>${esc(c.nombre)}</strong><span class="muted small">${esc(c.interes)}</span></span><span class="muted small">${ago(c.creado)}</span></button></li>`).join(''):`<li class="mini-empty">Todos los leads nuevos ya fueron contactados.</li>`;
+  const consultasList=nuevos.length?nuevos.slice(0,4).map(c=>`<li><button data-act="viewClient" data-id="${c.id}"><span class="stack"><strong>${esc(c.nombre)}</strong><span class="muted small">${esc(c.interes)}</span></span><span class="muted small">${ago(c.creado)}</span></button></li>`).join(''):`<li class="mini-empty">Todas las consultas nuevas ya fueron contactadas.</li>`;
 
   let third;
   if(admin){
@@ -549,13 +549,13 @@ function viewDashboard(){
   }
   const viejos=disp.slice(0,3);
 
-  return `<div class="page-head"><div><h1>Panel Operativo · ${esc(u.nombre.split(' ')[0])}</h1><p class="muted">${esc(hoy.charAt(0).toUpperCase()+hoy.slice(1))} · ${admin?'Vista Gerencial':'Vista Comercial'}</p></div><div class="head-actions"><button class="btn" data-act="newClient">${icon('plus',16)} Nuevo lead</button><button class="btn primary" data-act="newSale">${icon('plus',16)} Nueva operación</button></div></div>
+  return `<div class="page-head"><div><h1>Panel Operativo · ${esc(u.nombre.split(' ')[0])}</h1><p class="muted">${esc(hoy.charAt(0).toUpperCase()+hoy.slice(1))} · ${admin?'Vista Gerencial':'Vista Comercial'}</p></div><div class="head-actions"><button class="btn" data-act="newClient">${icon('plus',16)} Nueva consulta</button><button class="btn primary" data-act="newSale">${icon('plus',16)} Nueva operación</button></div></div>
 
 <div class="kpis">
   <div class="kpi"><div class="kpi-top"><span>Stock en salón</span></div><div class="kpi-val num">${enAgencia.length} un.</div><div class="kpi-sub num">${disp.length} disp. · ${res} res. (${moneyM(capitalStock)})</div></div>
   <div class="kpi"><div class="kpi-top"><span>Facturación ${esc(mes)}</span></div><div class="kpi-val num">${totalMes?moneyM(totalMes):'$ 0'}</div><div class="kpi-sub num">${vendidasMes.length} ${vendidasMes.length===1?'unidad entregada':'unidades entregadas'}</div></div>
   <div class="kpi"><div class="kpi-top"><span>Reservas activas</span></div><div class="kpi-val num">${reservas.length}</div><div class="kpi-sub num">${totalSenas?`Señas: ${money(totalSenas)}`:'Sin señas pendientes'}</div></div>
-  <div class="kpi"><div class="kpi-top"><span>Leads activos</span></div><div class="kpi-val num">${abiertos.length}</div><div class="kpi-sub">${nuevos.length?`${nuevos.length} sin primer contacto`:'Todos contactados'}</div></div>
+  <div class="kpi"><div class="kpi-top"><span>Consultas activas</span></div><div class="kpi-val num">${abiertos.length}</div><div class="kpi-sub">${nuevos.length?`${nuevos.length} sin primer contacto`:'Todas contactadas'}</div></div>
 </div>
 
 <section class="lot-wrap"><div class="block-head"><h2>Mapa de Playón y Salón</h2><p class="muted small">Distribución física por cochera. Seleccioná una unidad para ver su ficha o reservar.</p></div>
@@ -565,8 +565,8 @@ function viewDashboard(){
 <div class="dash">
 <section class="panel"><div class="panel-head"><h2>${admin?'Ventas':'Mis ventas'} de ${esc(mes)}</h2><span class="big num">${vendidasMes.length}</span></div>
 <p class="muted lead-line num">${totalMes?`Volumen operado: ${money(totalMes)}`:'Sin facturación registrada en el mes'}</p><ul class="mini-list">${ventasList}</ul></section>
-<section class="panel"><div class="panel-head"><h2>Leads pendientes de contacto</h2><span class="big num">${nuevos.length}</span></div>
-<p class="muted lead-line">${abiertos.length} leads totales en seguimiento activo</p><ul class="mini-list">${leadsList}</ul></section>
+<section class="panel"><div class="panel-head"><h2>Consultas sin contactar</h2><span class="big num">${nuevos.length}</span></div>
+<p class="muted lead-line">${abiertos.length} consultas abiertas en seguimiento activo</p><ul class="mini-list">${consultasList}</ul></section>
 ${third}
 <section class="panel"><div class="panel-head"><h2>Inmovilización de stock</h2><span class="muted small">Unidades disponibles</span></div>
 <ul class="mini-list">${viejos.length?viejos.map(v=>`<li><button data-act="viewVehicle" data-id="${v.id}"><span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${v.anio} · ${kms(v.km)}</span></span>${daysSince(v.ingreso)>60?badge('reservado',daysSince(v.ingreso)+' días'):`<span class="muted small num">${daysSince(v.ingreso)} días</span>`}</button></li>`).join(''):`<li class="mini-empty">No hay unidades disponibles.</li>`}</ul></section>
@@ -598,9 +598,9 @@ function carCard(v){
 
 function viewClientes(){
   const f=ui.cli,admin=isAdmin();
-  return `<div class="page-head"><div><h1>${admin?'Cartera de Clientes y Leads':'Mis Clientes y Leads'}</h1><p class="muted">${visibleClients().filter(c=>ABIERTOS.includes(c.estado)).length} oportunidades abiertas</p></div><button class="btn primary" data-act="newClient">${icon('plus',17)} Nuevo cliente</button></div>
+  return `<div class="page-head"><div><h1>${admin?'Clientes e Interesados':'Mis Clientes e Interesados'}</h1><p class="muted">${visibleClients().filter(c=>ABIERTOS.includes(c.estado)).length} consultas abiertas en seguimiento</p></div><button class="btn primary" data-act="newClient">${icon('plus',17)} Nuevo interesado</button></div>
 <div class="toolbar"><label class="search">${icon('search',17)}<input type="search" data-filter="cli.q" value="${esc(f.q)}" placeholder="Buscar por nombre, teléfono o vehículo buscado" aria-label="Buscar clientes"></label>
-<select data-filter="cli.estado" aria-label="Estado">${opts([['abiertos','Leads abiertos'],['todos','Todos los estados'],...Object.entries(ESTADOS_C)],f.estado)}</select>
+<select data-filter="cli.estado" aria-label="Estado">${opts([['abiertos','Consultas abiertas'],['todos','Todos los estados'],...Object.entries(ESTADOS_C)],f.estado)}</select>
 <select data-filter="cli.origen" aria-label="Origen">${opts([['todos','Todos los canales'],...ORIGENES.map(o=>[o,o])],f.origen)}</select></div>
 <p class="count" id="cli-count" aria-live="polite"></p><div class="list" id="cli-list"></div>`;
 }
@@ -643,7 +643,7 @@ function viewUsuarios(){
 <div class="list">${db.users.map(u=>{const self=u.id===db.session,n=db.clients.filter(c=>c.vendedorId===u.id).length;
 return `<div class="urow"><span class="avatar">${initials(u.nombre)}</span><div class="stack"><strong>${esc(u.nombre)}${self?' <span class="muted small">(sesión actual)</span>':''}</strong><span class="muted small">${esc(u.cargo||'Comercial')} · ${esc(u.email)}</span><span class="muted small num">${n} ${n===1?'cliente asignado':'clientes asignados'}</span></div>
 <div class="urow-ctl"><select data-change="userRol" data-id="${u.id}" aria-label="Rol de ${esc(u.nombre)}"${self?' disabled':''}>${opts([['admin','Administración'],['vendedor','Ejecutivo de Ventas']],u.rol)}</select>${self?'':`<button class="btn ghost sm text-danger" data-act="deleteUser" data-id="${u.id}">Dar de baja</button>`}</div></div>`}).join('')}</div>
-<div class="roles"><div><h3>Perfil Administración / Gerencia</h3><p class="muted small">Acceso completo al tablero gerencial, alta y edición de unidades, modificación de precios de lista, reasignación de leads y gestión de usuarios.</p></div><div><h3>Perfil Ejecutivo de Ventas</h3><p class="muted small">Consulta de stock completo y precios, gestión exclusiva de su propia cartera de clientes, registro de señas/reservas y cierre de operaciones propias.</p></div></div>`;
+<div class="roles"><div><h3>Perfil Administración / Gerencia</h3><p class="muted small">Acceso completo al tablero gerencial, alta y edición de unidades, modificación de precios de lista, reasignación de consultas y gestión de usuarios.</p></div><div><h3>Perfil Ejecutivo de Ventas</h3><p class="muted small">Consulta de stock completo y precios, gestión exclusiva de su propia cartera de interesados y clientes, registro de señas/reservas y cierre de operaciones propias.</p></div></div>`;
 }
 
 function refreshLists(){
@@ -759,13 +759,13 @@ function viewReceipt(id){
 function clientForm(c){
   const admin=isAdmin(),u=me();
   const e=c||{nombre:'',telefono:'',email:'',origen:'Showroom',interes:'',vendedorId:u.id,estado:'nuevo'};
-  openModal(`<form class="m-pad form" data-form="client" data-id="${c?c.id:''}" novalidate><h2>${c?'Editar datos del cliente':'Nuevo cliente / lead'}</h2><div class="fgrid">
+  openModal(`<form class="m-pad form" data-form="client" data-id="${c?c.id:''}" novalidate><h2>${c?'Editar datos del cliente':'Nueva consulta / interesado'}</h2><div class="fgrid">
 ${field('Nombre y apellido','nombre',e.nombre,{req:1,full:1,ph:'Ej: Juan Pérez'})}
 ${field('Teléfono / WhatsApp','telefono',e.telefono,{type:'tel',ph:'Ej: 11 5523-8841'})}${field('Correo electrónico','email',e.email,{type:'email',ph:'cliente@mail.com'})}
 ${select('Canal de ingreso','origen',e.origen,ORIGENES.map(o=>[o,o]))}${select('Estado comercial','estado',e.estado,Object.entries(ESTADOS_C))}
 ${field('Vehículo o búsqueda de interés','interes',e.interes,{full:1,ph:'Ej: SUV usada hasta $ 35 M o entrega usado'})}
 ${admin?select('Ejecutivo asignado','vendedorId',e.vendedorId,db.users.map(x=>[x.id,x.nombre]),{full:1}):`<input type="hidden" name="vendedorId" value="${esc(e.vendedorId)}">`}
-</div>${actions(c?'Guardar cambios':'Registrar cliente')}</form>`);
+</div>${actions(c?'Guardar cambios':'Registrar interesado')}</form>`);
 }
 
 function viewClient(id){
@@ -782,7 +782,7 @@ ${admin?`<label class="field"><span>Ejecutivo asignado</span><select data-change
 ${ops.length?`<h3 class="sec">Operaciones vinculadas</h3><ul class="ops">${ops.map(s=>`<li><span class="stack"><strong>${esc(vehName(vehicle(s.vehicleId)))}</strong><span class="muted small num">${money(s.precio)} · ${esc(s.codigo||'OP')}</span></span>${badge(s.estado,ESTADOS_S[s.estado])}</li>`).join('')}</ul>`:''}
 <h3 class="sec">Bitácora de seguimiento</h3>
 <form class="note-form" data-form="note" data-id="${c.id}"><textarea name="texto" rows="2" placeholder="Registrar llamado, cotización enviada, tasación de usado o visita al salón..." aria-label="Nueva nota" required></textarea><button class="btn primary sm" type="submit">Guardar nota</button></form>
-${c.notas.length?`<ol class="timeline">${c.notas.slice().reverse().map(n=>`<li><p>${esc(n.texto)}</p><span class="when">${fdateShort(n.fecha)} · ${esc(userName(n.autor))}</span></li>`).join('')}</ol>`:`<p class="muted small">Sin gestiones registradas. Al guardar la primera nota el lead pasa automáticamente a Contactado.</p>`}
+${c.notas.length?`<ol class="timeline">${c.notas.slice().reverse().map(n=>`<li><p>${esc(n.texto)}</p><span class="when">${fdateShort(n.fecha)} · ${esc(userName(n.autor))}</span></li>`).join('')}</ol>`:`<p class="muted small">Sin gestiones registradas. Al guardar la primera nota la consulta pasa automáticamente a Contactado.</p>`}
 <div class="m-actions"><button class="btn ghost push" data-act="editClient" data-id="${c.id}">Editar ficha</button>${ABIERTOS.includes(c.estado)?`<button class="btn primary" data-act="newSaleFor" data-id="${c.id}">Reservar / Vender unidad</button>`:''}</div></div>`);
 }
 
@@ -897,7 +897,7 @@ const FORMS={
     const c=client(f.dataset.id),t=(d.texto||'').trim();
     if(!t)throw new Error('Escribí el detalle de la gestión antes de guardar.');
     addNote(c,t);let msg='Gestión registrada en bitácora';
-    if(c.estado==='nuevo'){c.estado='contactado';msg='Nota guardada · El lead pasó a estado Contactado'}
+    if(c.estado==='nuevo'){c.estado='contactado';msg='Nota guardada · La consulta pasó a estado Contactado'}
     save();render();viewClient(c.id);toast(msg);
   },
   user:d=>{
