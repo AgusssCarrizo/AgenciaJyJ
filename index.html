@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Automotores J&J · Gestión Comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --bg:#f1f4f8;--surface:#ffffff;--surface-2:#f8fafc;--line:#e2e8f0;--line-strong:#cbd5e1;
+  --text:#0f172a;--muted:#64748b;
+  --rail:#0f172a;--rail-2:#1e293b;--rail-text:#94a3b8;--rail-accent:#38bdf8;
+  --blue:#1d4ed8;--blue-hover:#1e40af;--blue-ink:#ffffff;--blue-soft:#eff6ff;
+  --ok:#15803d;--ok-soft:#dcfce7;--ok-border:#bbf7d0;
+  --warn:#b45309;--warn-soft:#fef3c7;--warn-border:#fde68a;
+  --sold:#475569;--sold-soft:#f1f5f9;
+  --bad:#b91c1c;--bad-soft:#fee2e2;
+  --plate-bg:#ffffff;--plate-ink:#0f172a;--plate-band:#1e40af;
+  --floor:#e2e8f0;--floor-2:#cbd5e1;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.05);
+  --shadow:0 4px 12px -2px rgba(15,23,42,.07),0 2px 4px -2px rgba(15,23,42,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0b0f17;--surface:#131926;--surface-2:#1a2234;--line:#263147;--line-strong:#334155;
+    --text:#f1f5f9;--muted:#94a3b8;
+    --rail:#070a10;--rail-2:#111827;--rail-text:#94a3b8;--rail-accent:#38bdf8;
+    --blue:#3b82f6;--blue-hover:#60a5fa;--blue-ink:#ffffff;--blue-soft:#172554;
+    --ok:#4ade80;--ok-soft:#052e16;--ok-border:#14532d;
+    --warn:#fbbf24;--warn-soft:#451a03;--warn-border:#78350f;
+    --sold:#94a3b8;--sold-soft:#1e293b;
+    --bad:#f87171;--bad-soft:#450a0a;
+    --plate-bg:#f8fafc;--plate-ink:#0f172a;--plate-band:#1d4ed8;
+    --floor:#1e293b;--floor-2:#0f172a;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+    --shadow:0 6px 16px -4px rgba(0,0,0,.45);
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:400 14.5px/1.5 var(--sans);font-feature-settings:"cv02","cv03","cv04","cv11"}
+@media(min-width:900px){body{font-size:15px}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3,.h3{font-family:var(--cond);font-weight:700;line-height:1.12;margin:0;letter-spacing:-.01em}
+h1{font-size:1.95rem}h2{font-size:1.42rem}h3,.h3{font-size:1.15rem}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}.small{font-size:.81rem}
+a{color:var(--blue)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.stack{display:grid;gap:2px;min-width:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 14px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--text);font-weight:600;font-size:.88rem;cursor:pointer;text-decoration:none;white-space:nowrap;box-shadow:var(--shadow-sm);transition:background .15s,border-color .15s,transform .05s}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--blue-ink)}
+.btn.primary:hover{background:var(--blue-hover);border-color:var(--blue-hover)}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.ghost{background:transparent;border-color:transparent;box-shadow:none}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.sm{min-height:32px;padding:0 10px;font-size:.82rem;border-radius:7px}
+.btn.text-danger{color:var(--bad)}
+.btn.wa{color:#15803d;border-color:var(--ok-border);background:var(--ok-soft)}
+.btn.wa:hover{filter:brightness(.97)}
+
+/* Patente estilo Mercosur */
+.plate{display:inline-flex;flex-direction:column;border:1.5px solid var(--plate-ink);border-radius:4px;background:var(--plate-bg);color:var(--plate-ink);overflow:hidden;min-width:88px;font-family:var(--cond);line-height:1;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.22)}
+.plate::before{content:"REPÚBLICA ARGENTINA";display:block;font-size:5.5px;font-weight:700;letter-spacing:.06em;text-align:center;color:#fff;background:var(--plate-band);padding:1.5px 4px}
+.plate b{padding:3px 8px 4px;font-weight:700;font-size:15px;letter-spacing:.08em;text-align:center;white-space:nowrap}
+.plate.none b{color:#64748b;font-weight:600;letter-spacing:.02em;font-size:12.5px}
+
+/* Estructura */
+.shell{min-height:100vh}
+@media(min-width:900px){.shell{display:grid;grid-template-columns:256px minmax(0,1fr)}}
+.side{display:none}
+@media(min-width:900px){
+  .side{display:flex;flex-direction:column;gap:24px;background:var(--rail);color:var(--rail-text);padding:22px 14px;position:sticky;top:0;height:100vh;border-right:1px solid rgba(255,255,255,.06)}
+}
+.brand{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:0 6px}
+.brand-mark{display:flex;align-items:center;gap:10px;color:#fff}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:grid;place-items:center;color:#fff;font-family:var(--cond);font-weight:700;font-size:1.1rem;letter-spacing:.02em;flex:none;box-shadow:0 2px 8px rgba(37,99,235,.45)}
+.brand-title{font-family:var(--cond);font-weight:700;font-size:1.25rem;letter-spacing:.01em;line-height:1.05;color:var(--text)}
+.side .brand-title,.login-card .brand-title{color:#fff}
+.login-card .brand-title{color:var(--text)}
+.brand-sub{font-size:.74rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.demo-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;font-size:.69rem;font-weight:600;background:rgba(56,189,248,.14);color:#38bdf8;border:1px solid rgba(56,189,248,.28)}
+.login-card .demo-pill{background:var(--blue-soft);color:var(--blue);border-color:rgba(29,78,216,.2)}
+
+.side-nav{display:flex;flex-direction:column;gap:3px}
+.nav-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:8px;color:var(--rail-text);text-decoration:none;font-weight:500;font-size:.9rem;transition:background .15s,color .15s;background:none;border:0;width:100%;text-align:left;cursor:pointer}
+.nav-badge{margin-left:auto;font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.1);color:#e2e8f0}
+.side .nav-link:hover{background:rgba(255,255,255,.06);color:#fff}
+.side .nav-link.active{background:rgba(56,189,248,.13);color:#fff;box-shadow:inset 3px 0 0 var(--rail-accent);font-weight:600}
+.side .nav-link.active .nav-badge{background:var(--rail-accent);color:#0f172a}
+
+.side-foot{margin-top:auto;display:grid;gap:4px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08)}
+.who{display:flex;gap:10px;align-items:center;padding:6px 8px 10px}
+.who strong{display:block;color:#fff;font-weight:600;font-size:.88rem;line-height:1.2}
+.who .role{font-size:.76rem;color:var(--rail-text)}
+.btn.on-rail{color:var(--rail-text);justify-content:flex-start;font-weight:500;background:transparent;border-color:transparent;box-shadow:none;font-size:.84rem}
+.btn.on-rail:hover{background:rgba(255,255,255,.07);color:#fff}
+.avatar{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:.78rem;flex:none;border:1px solid rgba(29,78,216,.15)}
+.side .avatar{background:var(--rail-2);color:#f8fafc;border-color:rgba(255,255,255,.12)}
+.avatar.lg{width:50px;height:50px;font-size:.98rem}
+button.avatar{cursor:pointer}
+
+.mtop{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+@media(min-width:900px){.mtop{display:none}body::before{background:var(--bg)}}
+.main{padding:20px 16px 96px;max-width:1280px;width:100%}
+@media(min-width:900px){.main{padding:28px 36px 56px}}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar .nav-link{flex:1;flex-direction:column;gap:2px;padding:8px 2px 6px;font-size:.71rem;color:var(--muted);border-radius:0;align-items:center;font-weight:600}
+.tabbar .nav-link.active{color:var(--blue)}
+.tabbar .nav-badge{display:none}
+@media(min-width:900px){.tabbar{display:none}}
+
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:20px}
+.page-head p{margin-top:3px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* KPI Strip */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}
+@media(min-width:960px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow-sm);display:grid;gap:4px}
+.kpi-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.8rem;font-weight:600}
+.kpi-val{font-family:var(--cond);font-weight:700;font-size:1.85rem;line-height:1.05;color:var(--text)}
+.kpi-sub{font-size:.78rem;color:var(--muted)}
+
+/* Filtros */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center}
+.search{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:0 12px;min-height:38px;color:var(--muted);box-shadow:var(--shadow-sm)}
+.search input{border:0;background:none;outline:none;flex:1;min-width:0;color:var(--text);min-height:36px}
+.search:focus-within{outline:2px solid var(--blue);outline-offset:1px}
+.toolbar select{flex:1 1 150px}
+.toolbar select,.urow select,.field input,.field select,.field textarea,.note-form textarea{background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;min-height:38px;padding:0 10px;color:var(--text)}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button,.seg label span{border:0;background:none;padding:5px 11px;border-radius:6px;font-weight:600;font-size:.83rem;color:var(--muted);cursor:pointer;display:inline-block;transition:all .15s}
+.seg button[aria-pressed="true"],.seg input:checked+span{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg label{cursor:pointer;position:relative}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg input:focus-visible+span{outline:2px solid var(--blue)}
+.count{color:var(--muted);font-size:.83rem;margin-bottom:12px;font-weight:500}
+
+/* Estados */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:.75rem;font-weight:600;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-disponible,.b-ganado,.b-vendida{color:var(--ok);background:var(--ok-soft)}
+.b-reservado,.b-negociacion,.b-reservada{color:var(--warn);background:var(--warn-soft)}
+.b-vendido,.b-cancelada{color:var(--sold);background:var(--sold-soft)}
+.b-nuevo,.b-contactado{color:var(--blue);background:var(--blue-soft)}
+.b-perdido{color:var(--bad);background:var(--bad-soft)}
+
+/* Inventario */
+.cars{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:16px}
+.car{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;text-align:left;cursor:pointer;display:flex;flex-direction:column;padding:0;color:inherit;box-shadow:var(--shadow-sm);transition:border-color .15s,box-shadow .15s,transform .12s}
+.car:hover{border-color:var(--line-strong);box-shadow:var(--shadow);transform:translateY(-1px)}
+.car .pic{aspect-ratio:16/9;background:var(--floor);position:relative;display:block;border-bottom:1px solid var(--line)}
+.car .pic svg,.car .pic img{width:100%;height:100%;display:block;object-fit:cover}
+.car .pic .plate{position:absolute;left:10px;bottom:10px}
+.car .pic .badge{position:absolute;right:10px;top:10px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.car .pic .type-tag{position:absolute;left:10px;top:10px;background:rgba(15,23,42,.78);color:#fff;font-size:.71rem;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:.03em;backdrop-filter:blur(4px)}
+.car.is-sold .pic svg,.car.is-sold .pic img{opacity:.5;filter:grayscale(.4)}
+.car .info{padding:13px 15px 15px;display:grid;gap:2px;flex:1}
+.car .ver{color:var(--muted);font-size:.86rem}
+.car .meta{display:flex;flex-wrap:wrap;gap:4px 10px;color:var(--muted);font-size:.8rem;margin-top:7px;padding-top:7px;border-top:1px solid var(--line)}
+.car .price-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:8px}
+.car .price{font-family:var(--cond);font-weight:700;font-size:1.45rem;color:var(--text)}
+
+/* La playa / Playón */
+.lot-wrap{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow-sm)}
+.lot{background:linear-gradient(180deg,#1e2530 0%,#262f3d 100%);border-radius:10px;padding:18px 12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));row-gap:18px;border:1px solid #334155;position:relative}
+.stall{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 4px 4px;background:none;border:0;color:#f1f5f9;cursor:pointer;box-shadow:inset 1px 0 0 rgba(255,255,255,.28),inset -1px 0 0 rgba(255,255,255,.28);min-width:0;transition:background .15s}
+.stall:hover{background:rgba(255,255,255,.07)}
+.stall-bay{font-size:.63rem;font-weight:700;letter-spacing:.06em;color:#94a3b8;font-family:var(--cond)}
+.stall svg{position:relative;filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.stall.s-reservado::before{content:"";position:absolute;inset:0 3px;background:repeating-linear-gradient(135deg,rgba(251,191,36,.24) 0 6px,transparent 6px 12px);border-radius:4px}
+.stall-name{position:relative;font-size:.76rem;font-weight:600;line-height:1.15;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stall-days{position:relative;font-size:.69rem;color:#cbd5e1}
+.stall-days.old{color:#fbbf24;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:12px;font-size:.82rem;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px;background:#262f3d;border:1px solid #475569}
+.legend i.hatch{background:repeating-linear-gradient(135deg,rgba(251,191,36,.65) 0 3px,#262f3d 3px 6px)}
+
+/* Inicio */
+.block-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 12px;margin-bottom:12px}
+.dash{display:grid;gap:16px;margin-top:18px}
+@media(min-width:760px){.dash{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow-sm)}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.big{font-family:var(--cond);font-weight:700;font-size:2.2rem;line-height:1}
+.panel .lead-line{margin-bottom:12px}
+.mini-list{list-style:none;margin:0;padding:0}
+.mini-list li{border-top:1px solid var(--line)}
+.mini-list button{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:10px 4px;background:none;border:0;text-align:left;cursor:pointer;color:inherit;border-radius:6px}
+.mini-list button:hover{background:var(--surface-2)}
+.mini-list button:hover strong{color:var(--blue)}
+.mini-empty{padding:12px 0;color:var(--muted);border-top:1px solid var(--line);font-size:.88rem}
+.bars{display:grid;gap:13px;margin-top:12px}
+.bar-row{display:grid;grid-template-columns:minmax(90px,115px) 1fr auto;gap:10px;align-items:center;font-size:.88rem}
+.bar{height:10px;background:var(--surface-2);border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.bar span{display:block;height:100%;background:var(--blue);border-radius:5px}
+
+/* Listas */
+.list{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.crow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;cursor:pointer;color:inherit;width:100%}
+.crow:first-child,.srow:first-child,.urow:first-child{border-top:0}
+.crow:hover{background:var(--surface-2)}
+.crow-main span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow-side{display:grid;justify-items:end;gap:4px;text-align:right}
+.list-empty{padding:38px 20px;text-align:center;display:grid;gap:12px;justify-items:center;color:var(--muted)}
+.srow{display:grid;gap:10px;padding:14px 16px;border-top:1px solid var(--line)}
+@media(min-width:960px){.srow{grid-template-columns:1.55fr 1.15fr 1.05fr 1fr auto;align-items:center}}
+.srow-car{display:flex;gap:12px;align-items:center}
+.srow-act{display:flex;gap:6px;flex-wrap:wrap}
+.urow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:13px 16px;border-top:1px solid var(--line)}
+.urow-ctl{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+@media(min-width:600px){.urow{grid-template-columns:auto minmax(0,1fr) auto}.urow-ctl{grid-column:auto}}
+.roles{display:grid;gap:16px;margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px}
+@media(min-width:700px){.roles{grid-template-columns:1fr 1fr}}
+.roles p{margin-top:4px}
+
+/* Ventanas */
+dialog{border:1px solid var(--line);padding:0;border-radius:14px;background:var(--surface);color:var(--text);width:min(640px,calc(100vw - 20px));max-height:calc(100dvh - 32px);box-shadow:0 25px 65px -15px rgba(15,23,42,.5)}
+dialog[open]{display:flex;flex-direction:column}
+dialog::backdrop{background:rgba(15,23,42,.6);backdrop-filter:blur(2px)}
+#modal-body{overflow:auto;flex:1;min-height:0}
+.m-close{position:absolute;top:12px;right:12px;z-index:3;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--text);box-shadow:var(--shadow-sm)}
+.m-close:hover{background:var(--surface-2)}
+.m-hero{position:relative;background:var(--floor);aspect-ratio:16/8;display:block;border-bottom:1px solid var(--line)}
+.m-hero svg,.m-hero img{width:100%;height:100%;display:block;object-fit:cover}
+.m-hero.is-sold svg,.m-hero.is-sold img{opacity:.5}
+.m-hero-tags{position:absolute;left:16px;bottom:14px;display:flex;gap:8px;align-items:center}
+.m-pad{padding:22px}
+.m-title{padding-right:40px}
+.m-title p{margin-top:3px}
+.m-price-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px;margin:10px 0 16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.m-price{font-family:var(--cond);font-weight:700;font-size:2rem;line-height:1}
+.specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:12px 16px;margin:0 0 16px}
+.specs dt{font-size:.77rem;color:var(--muted);font-weight:500}
+.specs dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere;font-size:.92rem}
+.specs .full{grid-column:1/-1}
+.note-box{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin-bottom:8px;display:grid;gap:6px;justify-items:start}
+.m-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.m-actions .push{margin-right:auto;display:flex;gap:6px}
+.form h2{margin-bottom:16px;padding-right:40px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.fgrid{grid-template-columns:1fr}}
+.field{display:grid;gap:5px;font-size:.82rem;font-weight:600;color:var(--muted);align-content:start}
+.field input,.field select,.field textarea{font-weight:400;font-size:.93rem;width:100%}
+.field input:disabled{opacity:.55;background:var(--surface-2)}
+.field.full{grid-column:1/-1}
+.field input[type=file]{padding:7px 10px}
+.field small{font-weight:400}
+.static{color:var(--text);font-weight:600;min-height:38px;display:flex;align-items:center;margin:0}
+fieldset{border:0;padding:0;margin:0 0 14px}
+legend{font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:6px;padding:0}
+.c-head{display:flex;gap:14px;align-items:center;margin-bottom:14px;padding-right:40px}
+.c-contact{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.sec{margin:20px 0 10px}
+.note-form{display:grid;gap:8px;margin-bottom:16px}
+.note-form textarea{padding:10px;min-height:66px;resize:vertical;width:100%}
+.note-form .btn{justify-self:end}
+.timeline{list-style:none;margin:0 0 0 5px;padding:0 0 0 16px;border-left:2px solid var(--line);display:grid;gap:14px}
+.timeline li{position:relative}
+.timeline li::before{content:"";position:absolute;left:-23px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--blue)}
+.timeline .when{font-size:.76rem;color:var(--muted)}
+.ops{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.ops li{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 10px;align-items:center;background:var(--surface-2);border:1px solid var(--line);padding:10px 12px;border-radius:8px}
+.form-error{color:var(--bad);font-weight:600;font-size:.86rem;margin-top:12px}
+
+/* Comprobante de reserva */
+.receipt-box{border:1px dashed var(--line-strong);background:var(--surface-2);border-radius:10px;padding:16px;margin-top:12px;display:grid;gap:10px;font-size:.88rem}
+.receipt-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:10px}
+.receipt-row{display:flex;justify-content:space-between;gap:12px}
+
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--text);color:var(--surface);padding:10px 16px;border-radius:10px;font-weight:600;font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100vw - 32px);text-align:center;box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:900px){#toast{bottom:28px}}
+@media(prefers-reduced-motion:reduce){#toast{transition:none}}
+
+/* Ingreso */
+.login{min-height:100vh;display:grid;place-items:center;padding:28px 16px;background:radial-gradient(circle at top right,rgba(29,78,216,.07),transparent 50%),var(--bg)}
+.login-card{width:min(460px,100%);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;box-shadow:var(--shadow);display:grid;gap:20px}
+.login-card h1{margin-bottom:4px;font-size:1.75rem}
+.login-users{display:grid;gap:10px}
+.login-user{display:flex;gap:12px;align-items:center;padding:13px 14px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;cursor:pointer;text-align:left;color:inherit;transition:border-color .15s,background .15s}
+.login-user:hover{border-color:var(--blue);background:var(--surface)}
+.login-foot{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--line);gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="modal" aria-label="Detalle">
+  <button class="m-close" type="button" data-act="closeModal" aria-label="Cerrar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div id="modal-body"></div>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+const STORE='automotores-del-plata-mvp-v3';
+const app=document.getElementById('app');
+const dlg=document.getElementById('modal');
+const dlgBody=document.getElementById('modal-body');
+const toastEl=document.getElementById('toast');
+
+/* ---------- Utilidades ---------- */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$\u00a0'+Math.round(Number(n)||0).toLocaleString('es-AR');
+const moneyM=n=>'$\u00a0'+(Number(n)/1e6).toLocaleString('es-AR',{maximumFractionDigits:1})+'\u00a0M';
+const kms=n=>Number(n)===0?'0 km':Number(n).toLocaleString('es-AR')+' km';
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const nowISO=()=>new Date().toISOString();
+const daysAgo=d=>{const x=new Date();x.setDate(x.getDate()-d);return x.toISOString()};
+const fdate=iso=>iso?new Date(iso).toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}):'';
+const fdateShort=iso=>iso?new Date(iso).toLocaleDateString('es-AR',{day:'numeric',month:'short'}):'';
+const daysSince=iso=>Math.max(0,Math.floor((Date.now()-new Date(iso).getTime())/864e5));
+const ago=iso=>{const d=daysSince(iso);return d===0?'hoy':d===1?'ayer':'hace '+d+' días'};
+const sameMonth=iso=>{if(!iso)return false;const d=new Date(iso),n=new Date();return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear()};
+const initials=n=>String(n).split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const opts=(list,val)=>list.map(([v,l])=>`<option value="${esc(v)}"${String(v)===String(val)?' selected':''}>${esc(l)}</option>`).join('');
+
+const COLORS={'Blanco':'#f1f5f9','Negro':'#1e293b','Gris plata':'#94a3b8','Gris oscuro':'#475569','Rojo':'#dc2626','Azul':'#1d4ed8','Verde':'#15803d','Beige':'#d6c39c','Bordó':'#7f1d1d'};
+const CARROCERIAS=[['sedan','Sedán / Hatchback'],['suv','SUV / Utilitario'],['pickup','Pickup']];
+const TRANSMISIONES=['Automática','Manual','CVT'];
+const COMBUSTIBLES=['Nafta','Diésel','Híbrido'];
+const FORMAS_PAGO=['Contado / Transferencia','Financiación prendaria','Permuta + diferencia'];
+const ESTADOS_V={disponible:'Disponible',reservado:'Reservado',vendido:'Vendido'};
+const ESTADOS_C={nuevo:'Nuevo',contactado:'Contactado',negociacion:'En negociación',ganado:'Ganado',perdido:'Perdido'};
+const ESTADOS_S={reservada:'Reservada',vendida:'Vendida',cancelada:'Cancelada'};
+const ORIGENES=['Web','Instagram','WhatsApp','Showroom','Teléfono','Referido'];
+const ABIERTOS=['nuevo','contactado','negociacion'];
+
+const I={
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  car:'<path d="M4 16v-3l2-5a2 2 0 0 1 1.9-1.3h8.2A2 2 0 0 1 18 8l2 5v3"/><path d="M3 13h18M9.5 16h5"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.5 3.5 5.2"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
+  logout:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',
+  reset:'<path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/>',
+  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
+  doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>'
+};
+const icon=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
+
+/* ---------- Datos de ejemplo ---------- */
+function seed(){
+  const v=(id,marca,modelo,version,anio,tipo,km,color,carroceria,transmision,combustible,patente,precio,estado,ingreso,foto)=>({id,marca,modelo,version,anio,tipo,km,color,carroceria,transmision,combustible,patente,precio,estado,foto:foto||null,ingreso:daysAgo(ingreso)});
+  const n=(d,autor,texto)=>({fecha:daysAgo(d),autor,texto});
+  const c=(id,nombre,telefono,email,origen,vendedorId,estado,interes,creado,notas)=>({id,nombre,telefono,email,origen,vendedorId,estado,interes,creado:daysAgo(creado),notas});
+  return {
+    session:null,
+    users:[
+      {id:'u1',nombre:'Laura Gómez',cargo:'Gerente Comercial',email:'laura@automotoresdelplata.com.ar',rol:'admin'},
+      {id:'u2',nombre:'Martín Ruiz',cargo:'Ejecutivo de Ventas',email:'martin@automotoresdelplata.com.ar',rol:'vendedor'},
+      {id:'u3',nombre:'Sofía Paz',cargo:'Ejecutiva de Ventas',email:'sofia@automotoresdelplata.com.ar',rol:'vendedor'}
+    ],
+    vehicles:[
+      v('v1','Toyota','Hilux','SRV 2.8 TDI 4x4 AT',2026,'0km',0,'Gris plata','pickup','Automática','Diésel','',62400000,'disponible',12,'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=900&q=80'),
+      v('v2','Fiat','Cronos','Drive 1.3 Pack Plus',2026,'0km',0,'Rojo','sedan','Manual','Nafta','',28900000,'disponible',20,'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80'),
+      v('v3','Peugeot','208','Allure 1.6 Tiptronic',2026,'0km',0,'Azul','sedan','Automática','Nafta','',33500000,'reservado',9,'https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&w=900&q=80'),
+      v('v4','Volkswagen','Amarok','Highline V6 258cv 4Motion',2026,'0km',0,'Negro','pickup','Automática','Diésel','',71200000,'disponible',35,'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80'),
+      v('v5','Chevrolet','Onix','LT 1.0 Turbo MT',2025,'0km',0,'Blanco','sedan','Manual','Nafta','AH 512 TK',27800000,'vendido',40,'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80'),
+      v('v6','Ford','Ranger','XLT 3.2 4x4 AT',2023,'usado',45200,'Blanco','pickup','Automática','Diésel','AF 207 PL',41000000,'reservado',18,'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80'),
+      v('v7','Toyota','Corolla','XEI 2.0 CVT',2021,'usado',62300,'Gris oscuro','sedan','CVT','Nafta','AE 384 KD',29500000,'disponible',27,'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=900&q=80'),
+      v('v8','Volkswagen','Gol Trend','Comfortline 1.6',2019,'usado',88100,'Bordó','sedan','Manual','Nafta','AC 915 RN',13900000,'vendido',33,'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80'),
+      v('v9','Jeep','Compass','Longitude 2.4 AT6',2022,'usado',51700,'Verde','suv','Automática','Nafta','AE 761 HB',36200000,'disponible',64,'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=900&q=80'),
+      v('v10','Renault','Kangoo','Stepway 1.6 5A',2020,'usado',97400,'Blanco','suv','Manual','Nafta','AD 128 FZ',17800000,'disponible',81,'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80'),
+      v('v11','Citroën','C3','Feel 1.2 VTi',2024,'usado',21000,'Beige','sedan','Manual','Nafta','AG 455 MX',19500000,'vendido',70,'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=900&q=80')
+    ],
+    clients:[
+      c('c1','Ana Ferreyra','11 5523-8841','ana.ferreyra@mail.com','Instagram','u2','ganado','Auto chico usado, hasta $ 15 M',9,[n(9,'u2','Consultó por Instagram por el Gol Trend. Le pasé ficha y precio.'),n(6,'u2','Vino al salón y dejó seña de $ 1.000.000.'),n(3,'u2','Operación liquidada y unidad entregada: Volkswagen Gol Trend.')]),
+      c('c2','Diego Morales','11 4087-2290','diego.morales@mail.com','Web','u2','negociacion','Pickup usada 4x4 para uso mixto',7,[n(7,'u2','Completó el formulario web por la Ford Ranger XLT.'),n(4,'u2','Hizo prueba de manejo. Entrega Corsa 2012 en parte de pago (tasado en $ 6,5 M).'),n(2,'u2','Reservó la Ranger con seña de $ 2.500.000.')]),
+      c('c3','Carla Benítez','351 622-1408','carla.benitez@mail.com','Showroom','u3','negociacion','208 automático, financiado a 24 meses',5,[n(5,'u3','Pasó por el salón, le gustó el 208 Allure azul.'),n(1,'u3','Reservó el 208. Pre-aprobado crédito prendario Banco Santander.')]),
+      c('c4','Julián Ortiz','11 3341-7702','','WhatsApp','u3','ganado','Primer 0 km',14,[n(14,'u3','Escribió por WhatsApp preguntando disponibilidad del Onix.'),n(8,'u3','Venta confirmada: Chevrolet Onix LT.')]),
+      c('c5','Valentina Ríos','11 6612-0934','vale.rios@mail.com','Web','u2','nuevo','Toyota Hilux SRV, consulta por financiación',0,[]),
+      c('c6','Ramiro Acosta','341 509-3317','','Teléfono','u3','contactado','SUV usada, Compass o similar',4,[n(3,'u3','Llamado telefónico. Coordina visita para el sábado 10:30 hs a ver la Compass.')]),
+      c('c7','Lucía Herrera','11 2290-4416','lucia.herrera@mail.com','Referido','u2','nuevo','Primer auto, presupuesto alrededor de $ 18 M',1,[]),
+      c('c8','Pablo Sosa','11 5098-1123','','Instagram','u3','perdido','Amarok V6',20,[n(20,'u3','Consultó por la Amarok.'),n(12,'u3','Cerró compra en otro concesionario por entrega inmediata.')]),
+      c('c9','Marcos Vidal','11 4455-7781','marcos.vidal@mail.com','Showroom','u3','ganado','Auto compacto para ciudad',45,[n(40,'u3','Venta confirmada: Citroën C3.')])
+    ],
+    sales:[
+      {id:'s1',codigo:'OP-2026-014',vehicleId:'v8',clientId:'c1',vendedorId:'u2',precio:13900000,sena:1000000,formaPago:'Contado / Transferencia',estado:'vendida',fechaReserva:daysAgo(6),fechaVenta:daysAgo(3)},
+      {id:'s2',codigo:'OP-2026-015',vehicleId:'v5',clientId:'c4',vendedorId:'u3',precio:27800000,sena:2000000,formaPago:'Financiación prendaria',estado:'vendida',fechaReserva:daysAgo(10),fechaVenta:daysAgo(8)},
+      {id:'s3',codigo:'OP-2026-016',vehicleId:'v6',clientId:'c2',vendedorId:'u2',precio:41000000,sena:2500000,formaPago:'Permuta + diferencia',estado:'reservada',fechaReserva:daysAgo(2),fechaVenta:null},
+      {id:'s4',codigo:'OP-2026-017',vehicleId:'v3',clientId:'c3',vendedorId:'u3',precio:33500000,sena:1500000,formaPago:'Financiación prendaria',estado:'reservada',fechaReserva:daysAgo(1),fechaVenta:null},
+      {id:'s5',codigo:'OP-2026-011',vehicleId:'v11',clientId:'c9',vendedorId:'u3',precio:19500000,sena:0,formaPago:'Contado / Transferencia',estado:'vendida',fechaReserva:daysAgo(42),fechaVenta:daysAgo(40)}
+    ]
+  };
+}
+
+/* ---------- Guardado ---------- */
+let saveWarned=false;
+function load(){try{const r=localStorage.getItem(STORE);if(!r)return null;const d=JSON.parse(r);return d&&d.users&&d.vehicles&&d.clients&&d.sales?d:null}catch(e){return null}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){if(!saveWarned){saveWarned=true;toast('Este navegador no guarda cambios: se pierden al recargar la página.')}}}
+let db=load()||seed();
+
+const ui={
+  view:'dashboard',
+  inv:{q:'',tipo:'todos',estado:'todos',orden:'recientes'},
+  cli:{q:'',estado:'abiertos',origen:'todos'},
+  ven:{estado:'todas'}
+};
+function setPath(p,val){const [a,b]=p.split('.');ui[a][b]=val}
+
+/* ---------- Consultas ---------- */
+const me=()=>db.users.find(u=>u.id===db.session);
+const isAdmin=()=>{const u=me();return !!u&&u.rol==='admin'};
+const vehicle=id=>db.vehicles.find(v=>v.id===id);
+const client=id=>db.clients.find(c=>c.id===id);
+const userName=id=>{const u=db.users.find(x=>x.id===id);return u?u.nombre:'Sin asignar'};
+const vehName=v=>v?`${v.marca} ${v.modelo}`:'Unidad eliminada';
+const visibleClients=()=>isAdmin()?db.clients:db.clients.filter(c=>c.vendedorId===db.session);
+const visibleSales=()=>isAdmin()?db.sales:db.sales.filter(s=>s.vendedorId===db.session);
+const canManage=s=>isAdmin()||s.vendedorId===db.session;
+const lastTouch=c=>c.notas.length?c.notas[c.notas.length-1].fecha:c.creado;
+const currentSale=vid=>db.sales.filter(s=>s.vehicleId===vid&&s.estado!=='cancelada').sort((a,b)=>new Date(b.fechaReserva)-new Date(a.fechaReserva))[0];
+const waNum=t=>{const d=String(t).replace(/\D/g,'');return d.startsWith('54')?d:'549'+d.replace(/^0/,'')};
+
+/* ---------- Piezas visuales ---------- */
+const plate=v=>v.patente?`<span class="plate"><b>${esc(v.patente)}</b></span>`:`<span class="plate none"><b>0 KM · SIN PATENTAR</b></span>`;
+const badge=(key,label)=>`<span class="badge b-${key}">${esc(label)}</span>`;
+const vBadge=v=>badge(v.estado,ESTADOS_V[v.estado]);
+
+const BODIES={
+  sedan:{body:'M22 124 L24 102 Q26 92 40 88 L84 79 L120 57 Q130 51 146 51 L200 51 Q216 51 228 59 L258 81 L284 89 Q298 93 298 106 L298 124 Z',win:['M98 79 L126 61 Q133 57 144 57 L168 57 L168 79 Z','M176 57 L200 57 Q212 57 220 63 L242 79 L176 79 Z']},
+  suv:{body:'M22 124 L22 98 Q24 87 38 85 L80 79 L104 51 Q110 45 124 45 L234 45 Q248 45 256 55 L276 80 Q298 86 298 101 L298 124 Z',win:['M96 79 L114 53 Q118 51 126 51 L180 51 L180 79 Z','M188 51 L232 51 Q242 51 248 59 L262 79 L188 79 Z']},
+  pickup:{body:'M20 124 L20 99 Q20 88 34 86 L78 80 L104 54 Q110 48 122 48 L176 48 Q185 48 187 57 L189 81 L292 81 Q299 81 299 89 L299 124 Z',win:['M92 80 L112 58 Q116 54 124 54 L180 54 L182 80 Z']}
+};
+function carSVG(v){
+  const b=BODIES[v.carroceria]||BODIES.sedan,c=COLORS[v.color]||'#8a9098';
+  return `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(vehName(v))}">
+<defs><linearGradient id="g-${v.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--floor)"/><stop offset="100%" stop-color="var(--floor-2)"/></linearGradient></defs>
+<rect width="320" height="180" fill="url(#g-${v.id})"/><rect y="146" width="320" height="34" fill="var(--floor-2)"/>
+<ellipse cx="160" cy="148" rx="142" ry="7" fill="#000" opacity=".22"/>
+<g transform="translate(0,2)"><path d="${b.body}" fill="${c}" stroke="rgba(0,0,0,.35)" stroke-width="1.2"/>
+${b.win.map(p=>`<path d="${p}" fill="#cbd5e1" opacity=".92"/>`).join('')}
+<path d="M38 104 H292" stroke="rgba(255,255,255,.24)" stroke-width="2"/>
+${[80,240].map(x=>`<circle cx="${x}" cy="124" r="22" fill="#0f172a"/><circle cx="${x}" cy="124" r="11" fill="#94a3b8"/><circle cx="${x}" cy="124" r="4" fill="#334155"/>`).join('')}</g></svg>`;
+}
+const carArt=v=>v.foto?`<img src="${esc(v.foto)}" alt="${esc(vehName(v))}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;width:100%;height:100%">${carSVG(v)}</span>`:carSVG(v);
+function topCar(v){
+  const c=COLORS[v.color]||'#8a9098';
+  return `<svg viewBox="0 0 38 66" width="32" height="56" aria-hidden="true">
+<rect x="3" y="2" width="32" height="62" rx="9" fill="${c}" stroke="rgba(0,0,0,.55)" stroke-width="1.2"/>
+<rect x="1" y="18" width="2" height="5" rx="1" fill="${c}"/><rect x="35" y="18" width="2" height="5" rx="1" fill="${c}"/>
+<rect x="7" y="14" width="24" height="11" rx="3" fill="#cbd5e1"/>
+${v.carroceria==='pickup'?'<rect x="7" y="37" width="24" height="22" rx="2" fill="rgba(0,0,0,.32)"/>':'<rect x="7" y="46" width="24" height="7" rx="3" fill="#cbd5e1" opacity=".82"/>'}
+<rect x="7" y="3" width="5" height="2" rx="1" fill="#fef08a"/><rect x="26" y="3" width="5" height="2" rx="1" fill="#fef08a"/>
+</svg>`;
+}
+const brand=(sub=true)=>`<div class="brand"><div class="brand-mark"><span class="brand-logo">AP</span><div><div class="brand-title">Automotores Del Plata</div>${sub?'<div class="brand-sub">Casa Central · <span class="demo-pill">Demo Fase 1</span></div>':''}</div></div></div>`;
+
+/* ---------- Vistas ---------- */
+const VIEWS={dashboard:viewDashboard,inventario:viewInventario,clientes:viewClientes,ventas:viewVentas,usuarios:viewUsuarios};
+function navItems(){
+  const nuevos=visibleClients().filter(c=>c.estado==='nuevo').length;
+  const resAct=visibleSales().filter(s=>s.estado==='reservada').length;
+  const l=[
+    ['dashboard','Inicio','home',0],
+    ['inventario','Inventario','car',0],
+    ['clientes','Clientes','users',nuevos],
+    ['ventas','Ventas y Reservas','receipt',resAct]
+  ];
+  if(isAdmin())l.push(['usuarios','Equipo y Roles','shield',0]);
+  return l;
+}
+function route(){
+  let h=ui.view||'dashboard';
+  if(!VIEWS[h])h='dashboard';
+  if(h==='usuarios'&&!isAdmin())h='dashboard';
+  ui.view=h;
+  return h;
+}
+
+function render(){
+  const u=me();
+  if(!u){app.innerHTML=viewLogin();return}
+  const view=route();
+  const links=navItems().map(([k,l,ic,cnt])=>`<button type="button" data-act="go" data-id="${k}" class="nav-link${k===view?' active':''}"${k===view?' aria-current="page"':''}>${icon(ic)}<span>${l}</span>${cnt?`<span class="nav-badge num">${cnt}</span>`:''}</button>`).join('');
+  app.innerHTML=`<div class="shell">
+<aside class="side">${brand()}<nav class="side-nav" aria-label="Secciones">${links}</nav>
+<div class="side-foot"><div class="who"><span class="avatar">${initials(u.nombre)}</span><div><strong>${esc(u.nombre)}</strong><span class="role">${esc(u.cargo||(u.rol==='admin'?'Administración':'Ejecutivo de Ventas'))}</span></div></div>
+<button class="btn on-rail" data-act="logout">${icon('logout',17)} Cambiar de usuario</button>
+<button class="btn on-rail" data-act="resetDemo">${icon('reset',17)} Reiniciar datos de ejemplo</button></div></aside>
+<header class="mtop">${brand(false)}<button class="avatar" data-act="userMenu" aria-label="Opciones de ${esc(u.nombre)}">${initials(u.nombre)}</button></header>
+<main class="main" id="main">${VIEWS[view]()}</main>
+<nav class="tabbar" aria-label="Secciones">${links}</nav></div>`;
+  refreshLists();
+}
+
+function viewLogin(){
+  return `<div class="login"><div class="login-card">${brand()}
+<div><h1>Ingreso al Sistema</h1><p class="muted">Seleccioná un perfil operativo para evaluar los permisos y vistas de cada rol.</p></div>
+<div class="login-users">${db.users.map(u=>`<button class="login-user" data-act="login" data-id="${u.id}"><span class="avatar">${initials(u.nombre)}</span><span class="stack"><strong>${esc(u.nombre)} · <span class="muted small">${esc(u.cargo||(u.rol==='admin'?'Administración':'Vendedor'))}</span></strong><span class="muted small">${u.rol==='admin'?'Acceso total: stock, precios, equipo, clientes y métricas globales.':'Acceso comercial: inventario completo, cartera propia de clientes y operaciones.'}</span></span></button>`).join('')}</div>
+<div class="login-foot"><span class="muted small">Los cambios se guardan localmente en este navegador.</span><button class="btn sm ghost" data-act="resetDemo">${icon('reset',15)} Restaurar demo</button></div></div></div>`;
+}
+
+function viewDashboard(){
+  const u=me(),admin=isAdmin();
+  const enAgencia=db.vehicles.filter(v=>v.estado!=='vendido').sort((a,b)=>new Date(a.ingreso)-new Date(b.ingreso));
+  const disp=enAgencia.filter(v=>v.estado==='disponible');
+  const res=enAgencia.length-disp.length;
+  const capitalStock=enAgencia.reduce((a,v)=>a+Number(v.precio),0);
+
+  const sales=visibleSales();
+  const vendidasMes=sales.filter(s=>s.estado==='vendida'&&sameMonth(s.fechaVenta)).sort((a,b)=>new Date(b.fechaVenta)-new Date(a.fechaVenta));
+  const totalMes=vendidasMes.reduce((a,s)=>a+Number(s.precio),0);
+  const reservas=sales.filter(s=>s.estado==='reservada');
+  const totalSenas=reservas.reduce((a,s)=>a+Number(s.sena),0);
+
+  const clients=visibleClients();
+  const abiertos=clients.filter(c=>ABIERTOS.includes(c.estado));
+  const nuevos=clients.filter(c=>c.estado==='nuevo').sort((a,b)=>new Date(b.creado)-new Date(a.creado));
+  const mes=new Date().toLocaleDateString('es-AR',{month:'long'});
+  const hoy=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
+
+  const stalls=enAgencia.length?enAgencia.map((v,idx)=>{
+    const d=daysSince(v.ingreso);
+    return `<button class="stall s-${v.estado}" data-act="viewVehicle" data-id="${v.id}" aria-label="Cochera ${idx+1}: ${esc(vehName(v))}, ${ESTADOS_V[v.estado]}, ${d} días en stock"><span class="stall-bay">P-${String(idx+1).padStart(2,'0')}</span>${topCar(v)}<span class="stall-name">${esc(v.modelo)}</span><span class="stall-days${d>60?' old':''} num">${d} d</span></button>`;
+  }).join(''):`<p style="color:#cbd5e1;padding:12px;grid-column:1/-1">No hay unidades en el playón. Cargá una desde Inventario.</p>`;
+
+  const ventasList=vendidasMes.length?vendidasMes.slice(0,4).map(s=>{const v=vehicle(s.vehicleId),c=client(s.clientId);return `<li><button data-act="viewVehicle" data-id="${s.vehicleId}"><span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${esc(c?c.nombre:'Cliente')} · ${fdateShort(s.fechaVenta)}</span></span><span class="num" style="font-weight:600">${moneyM(s.precio)}</span></button></li>`}).join(''):`<li class="mini-empty">Todavía no hay ventas cerradas este mes.</li>`;
+
+  const leadsList=nuevos.length?nuevos.slice(0,4).map(c=>`<li><button data-act="viewClient" data-id="${c.id}"><span class="stack"><strong>${esc(c.nombre)}</strong><span class="muted small">${esc(c.interes)}</span></span><span class="muted small">${ago(c.creado)}</span></button></li>`).join(''):`<li class="mini-empty">Todos los leads nuevos ya fueron contactados.</li>`;
+
+  let third;
+  if(admin){
+    const rows=db.users.map(x=>{const ss=db.sales.filter(s=>s.vendedorId===x.id&&s.estado==='vendida'&&sameMonth(s.fechaVenta));return {u:x,n:ss.length,t:ss.reduce((a,s)=>a+Number(s.precio),0)}}).filter(r=>r.u.rol==='vendedor'||r.n>0);
+    const max=Math.max(1,...rows.map(r=>r.t));
+    third=`<section class="panel"><div class="panel-head"><h2>Ranking comercial</h2><span class="muted small">${esc(mes)}</span></div>
+<div class="bars">${rows.map(r=>`<div class="bar-row"><span>${esc(r.u.nombre.split(' ')[0])}</span><span class="bar"><span style="width:${Math.round(r.t/max*100)}%"></span></span><span class="muted small num">${r.n} ${r.n===1?'venta':'ventas'}${r.t?` · ${moneyM(r.t)}`:''}</span></div>`).join('')}</div></section>`;
+  }else{
+    third=`<section class="panel"><div class="panel-head"><h2>Mis reservas activas</h2><span class="big num">${reservas.length}</span></div>
+<ul class="mini-list">${reservas.length?reservas.map(s=>{const v=vehicle(s.vehicleId),c=client(s.clientId);return `<li><button data-act="viewVehicle" data-id="${s.vehicleId}"><span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${esc(c?c.nombre:'')} · Seña ${money(s.sena)}</span></span><span class="muted small">${ago(s.fechaReserva)}</span></button></li>`}).join(''):`<li class="mini-empty">No tenés reservas pendientes de liquidar.</li>`}</ul></section>`;
+  }
+  const viejos=disp.slice(0,3);
+
+  return `<div class="page-head"><div><h1>Panel Operativo · ${esc(u.nombre.split(' ')[0])}</h1><p class="muted">${esc(hoy.charAt(0).toUpperCase()+hoy.slice(1))} · ${admin?'Vista Gerencial':'Vista Comercial'}</p></div><div class="head-actions"><button class="btn" data-act="newClient">${icon('plus',16)} Nuevo lead</button><button class="btn primary" data-act="newSale">${icon('plus',16)} Nueva operación</button></div></div>
+
+<div class="kpis">
+  <div class="kpi"><div class="kpi-top"><span>Stock en salón</span></div><div class="kpi-val num">${enAgencia.length} un.</div><div class="kpi-sub num">${disp.length} disp. · ${res} res. (${moneyM(capitalStock)})</div></div>
+  <div class="kpi"><div class="kpi-top"><span>Facturación ${esc(mes)}</span></div><div class="kpi-val num">${totalMes?moneyM(totalMes):'$ 0'}</div><div class="kpi-sub num">${vendidasMes.length} ${vendidasMes.length===1?'unidad entregada':'unidades entregadas'}</div></div>
+  <div class="kpi"><div class="kpi-top"><span>Reservas activas</span></div><div class="kpi-val num">${reservas.length}</div><div class="kpi-sub num">${totalSenas?`Señas: ${money(totalSenas)}`:'Sin señas pendientes'}</div></div>
+  <div class="kpi"><div class="kpi-top"><span>Leads activos</span></div><div class="kpi-val num">${abiertos.length}</div><div class="kpi-sub">${nuevos.length?`${nuevos.length} sin primer contacto`:'Todos contactados'}</div></div>
+</div>
+
+<section class="lot-wrap"><div class="block-head"><h2>Mapa de Playón y Salón</h2><p class="muted small">Distribución física por cochera. Seleccioná una unidad para ver su ficha o reservar.</p></div>
+<div class="lot">${stalls}</div>
+<div class="legend"><span><i></i>Disponible</span><span><i class="hatch"></i>Reservada</span><span>El indicador superior muestra la cochera y el inferior los días en stock (>60 d en alerta).</span></div></section>
+
+<div class="dash">
+<section class="panel"><div class="panel-head"><h2>${admin?'Ventas':'Mis ventas'} de ${esc(mes)}</h2><span class="big num">${vendidasMes.length}</span></div>
+<p class="muted lead-line num">${totalMes?`Volumen operado: ${money(totalMes)}`:'Sin facturación registrada en el mes'}</p><ul class="mini-list">${ventasList}</ul></section>
+<section class="panel"><div class="panel-head"><h2>Leads pendientes de contacto</h2><span class="big num">${nuevos.length}</span></div>
+<p class="muted lead-line">${abiertos.length} leads totales en seguimiento activo</p><ul class="mini-list">${leadsList}</ul></section>
+${third}
+<section class="panel"><div class="panel-head"><h2>Inmovilización de stock</h2><span class="muted small">Unidades disponibles</span></div>
+<ul class="mini-list">${viejos.length?viejos.map(v=>`<li><button data-act="viewVehicle" data-id="${v.id}"><span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${v.anio} · ${kms(v.km)}</span></span>${daysSince(v.ingreso)>60?badge('reservado',daysSince(v.ingreso)+' días'):`<span class="muted small num">${daysSince(v.ingreso)} días</span>`}</button></li>`).join(''):`<li class="mini-empty">No hay unidades disponibles.</li>`}</ul></section>
+</div>`;
+}
+
+function viewInventario(){
+  const admin=isAdmin(),f=ui.inv;
+  const seg=(val,label)=>`<button type="button" data-act="setFilter" data-key="inv.tipo" data-val="${val}" aria-pressed="${f.tipo===val}">${label}</button>`;
+  return `<div class="page-head"><div><h1>Inventario de Unidades</h1><p class="muted">${db.vehicles.filter(v=>v.estado!=='vendido').length} unidades físicas en salón y playón</p></div>${admin?`<button class="btn primary" data-act="newVehicle">${icon('plus',17)} Ingresar unidad</button>`:''}</div>
+<div class="toolbar"><label class="search">${icon('search',17)}<input type="search" data-filter="inv.q" value="${esc(f.q)}" placeholder="Buscar por marca, modelo, versión o dominio" aria-label="Buscar unidades"></label>
+<div class="seg" role="group" aria-label="Tipo de unidad">${seg('todos','Todos')}${seg('0km','0 km')}${seg('usado','Usados')}</div>
+<select data-filter="inv.estado" aria-label="Estado">${opts([['todos','Todos los estados'],['disponible','Disponibles'],['reservado','Reservados'],['vendido','Vendidos']],f.estado)}</select>
+<select data-filter="inv.orden" aria-label="Ordenar">${opts([['recientes','Ingreso más reciente'],['dias','Mayor antigüedad en stock'],['precio-asc','Menor precio'],['precio-desc','Mayor precio']],f.orden)}</select></div>
+<p class="count" id="inv-count" aria-live="polite"></p><div class="cars" id="inv-list"></div>`;
+}
+function filteredVehicles(){
+  const f=ui.inv,q=f.q.trim().toLowerCase();
+  const l=db.vehicles.filter(v=>(f.tipo==='todos'||v.tipo===f.tipo)&&(f.estado==='todos'||v.estado===f.estado)&&(!q||`${v.marca} ${v.modelo} ${v.version} ${v.patente} ${v.anio}`.toLowerCase().includes(q)));
+  const o=f.orden;
+  return l.sort((a,b)=>o==='precio-asc'?a.precio-b.precio:o==='precio-desc'?b.precio-a.precio:o==='dias'?new Date(a.ingreso)-new Date(b.ingreso):new Date(b.ingreso)-new Date(a.ingreso));
+}
+function carCard(v){
+  return `<button class="car${v.estado==='vendido'?' is-sold':''}" data-act="viewVehicle" data-id="${v.id}"><span class="pic">${carArt(v)}<span class="type-tag">${v.tipo==='0km'?'0 KM':'USADO'}</span>${plate(v)}${vBadge(v)}</span>
+<span class="info"><span class="h3">${esc(vehName(v))}</span><span class="ver">${esc(v.version)}</span>
+<span class="meta num"><span>${v.anio}</span><span>·</span><span>${kms(v.km)}</span>${v.transmision?`<span>·</span><span>${esc(v.transmision)}</span>`:''}</span>
+<span class="price-row"><span class="price num">${money(v.precio)}</span>${v.estado!=='vendido'?`<span class="muted small num">${daysSince(v.ingreso)} d</span>`:''}</span></span></button>`;
+}
+
+function viewClientes(){
+  const f=ui.cli,admin=isAdmin();
+  return `<div class="page-head"><div><h1>${admin?'Cartera de Clientes y Leads':'Mis Clientes y Leads'}</h1><p class="muted">${visibleClients().filter(c=>ABIERTOS.includes(c.estado)).length} oportunidades abiertas</p></div><button class="btn primary" data-act="newClient">${icon('plus',17)} Nuevo cliente</button></div>
+<div class="toolbar"><label class="search">${icon('search',17)}<input type="search" data-filter="cli.q" value="${esc(f.q)}" placeholder="Buscar por nombre, teléfono o vehículo buscado" aria-label="Buscar clientes"></label>
+<select data-filter="cli.estado" aria-label="Estado">${opts([['abiertos','Leads abiertos'],['todos','Todos los estados'],...Object.entries(ESTADOS_C)],f.estado)}</select>
+<select data-filter="cli.origen" aria-label="Origen">${opts([['todos','Todos los canales'],...ORIGENES.map(o=>[o,o])],f.origen)}</select></div>
+<p class="count" id="cli-count" aria-live="polite"></p><div class="list" id="cli-list"></div>`;
+}
+function filteredClients(){
+  const f=ui.cli,q=f.q.trim().toLowerCase();
+  return visibleClients().filter(c=>(f.estado==='todos'||(f.estado==='abiertos'?ABIERTOS.includes(c.estado):c.estado===f.estado))&&(f.origen==='todos'||c.origen===f.origen)&&(!q||`${c.nombre} ${c.telefono} ${c.email} ${c.interes}`.toLowerCase().includes(q))).sort((a,b)=>new Date(lastTouch(b))-new Date(lastTouch(a)));
+}
+function clientRow(c){
+  return `<button class="crow" data-act="viewClient" data-id="${c.id}"><span class="avatar">${initials(c.nombre)}</span>
+<span class="stack crow-main"><strong>${esc(c.nombre)}</strong><span class="muted small">${esc(c.interes||'Sin unidad de interés especificada')}</span></span>
+<span class="crow-side">${badge(c.estado,ESTADOS_C[c.estado])}<span class="muted small">${isAdmin()?`${esc(userName(c.vendedorId).split(' ')[0])} · `:''}${esc(c.origen)}</span></span></button>`;
+}
+
+function viewVentas(){
+  const f=ui.ven;
+  const seg=(val,label)=>`<button type="button" data-act="setFilter" data-key="ven.estado" data-val="${val}" aria-pressed="${f.estado===val}">${label}</button>`;
+  return `<div class="page-head"><div><h1>${isAdmin()?'Ventas y Reservas':'Mis Ventas y Reservas'}</h1><p class="muted">Cada reserva bloquea la unidad en playón hasta su liquidación o cancelación.</p></div><button class="btn primary" data-act="newSale">${icon('plus',17)} Nueva operación</button></div>
+<div class="toolbar"><div class="seg" role="group" aria-label="Estado de la operación">${seg('todas','Todas')}${seg('reservada','Reservas activas')}${seg('vendida','Liquidadas')}${seg('cancelada','Canceladas')}</div></div>
+<p class="count" id="ven-count" aria-live="polite"></p><div class="list" id="ven-list"></div>`;
+}
+function filteredSales(){
+  const f=ui.ven.estado;
+  return visibleSales().filter(s=>f==='todas'||s.estado===f).sort((a,b)=>new Date(b.fechaVenta||b.fechaReserva)-new Date(a.fechaVenta||a.fechaReserva));
+}
+function saleRow(s){
+  const v=vehicle(s.vehicleId),c=client(s.clientId);
+  const fecha=s.estado==='vendida'?`Liquidada el ${fdateShort(s.fechaVenta)}`:`Reservada el ${fdateShort(s.fechaReserva)}`;
+  const acts=s.estado==='reservada'&&canManage(s)
+    ?`<button class="btn sm" data-act="viewReceipt" data-id="${s.id}" title="Ver comprobante">${icon('doc',15)} Comprobante</button><button class="btn primary sm" data-act="confirmSale" data-id="${s.id}">Confirmar venta</button><button class="btn sm" data-act="cancelReserva" data-id="${s.id}">Cancelar</button>`
+    :`<button class="btn ghost sm" data-act="viewReceipt" data-id="${s.id}">${icon('doc',15)} Detalle</button>`;
+  return `<article class="srow"><div class="srow-car">${v?plate(v):''}<span class="stack"><strong>${esc(vehName(v))}</strong><span class="muted small">${esc(s.codigo||'OP')} · ${v?`${esc(v.version)} (${v.anio})`:''}</span></span></div>
+<div class="stack"><strong>${esc(c?c.nombre:'Cliente eliminado')}</strong><span class="muted small">Ejecutivo: ${esc(userName(s.vendedorId))}</span></div>
+<div class="stack num"><strong>${money(s.precio)}</strong><span class="muted small">${s.sena?`Seña: ${money(s.sena)}`:'Sin seña'} · ${esc(s.formaPago||'Contado')}</span></div>
+<div class="stack" style="justify-items:start">${badge(s.estado,ESTADOS_S[s.estado])}<span class="muted small">${fecha}</span></div>
+<div class="srow-act">${acts}</div></article>`;
+}
+
+function viewUsuarios(){
+  return `<div class="page-head"><div><h1>Equipo y Permisos</h1><p class="muted">Administración de usuarios internos y niveles de acceso al sistema.</p></div><button class="btn primary" data-act="newUser">${icon('plus',17)} Alta de usuario</button></div>
+<div class="list">${db.users.map(u=>{const self=u.id===db.session,n=db.clients.filter(c=>c.vendedorId===u.id).length;
+return `<div class="urow"><span class="avatar">${initials(u.nombre)}</span><div class="stack"><strong>${esc(u.nombre)}${self?' <span class="muted small">(sesión actual)</span>':''}</strong><span class="muted small">${esc(u.cargo||'Comercial')} · ${esc(u.email)}</span><span class="muted small num">${n} ${n===1?'cliente asignado':'clientes asignados'}</span></div>
+<div class="urow-ctl"><select data-change="userRol" data-id="${u.id}" aria-label="Rol de ${esc(u.nombre)}"${self?' disabled':''}>${opts([['admin','Administración'],['vendedor','Ejecutivo de Ventas']],u.rol)}</select>${self?'':`<button class="btn ghost sm text-danger" data-act="deleteUser" data-id="${u.id}">Dar de baja</button>`}</div></div>`}).join('')}</div>
+<div class="roles"><div><h3>Perfil Administración / Gerencia</h3><p class="muted small">Acceso completo al tablero gerencial, alta y edición de unidades, modificación de precios de lista, reasignación de leads y gestión de usuarios.</p></div><div><h3>Perfil Ejecutivo de Ventas</h3><p class="muted small">Consulta de stock completo y precios, gestión exclusiva de su propia cartera de clientes, registro de señas/reservas y cierre de operaciones propias.</p></div></div>`;
+}
+
+function refreshLists(){
+  const inv=document.getElementById('inv-list');
+  if(inv){const l=filteredVehicles();document.getElementById('inv-count').textContent=`Mostrando ${l.length} ${l.length===1?'unidad':'unidades'}`;
+    inv.innerHTML=l.length?l.map(carCard).join(''):`<div class="list-empty" style="grid-column:1/-1"><p>Ninguna unidad coincide con los filtros aplicados.</p><button class="btn" data-act="clearInv">Limpiar filtros</button></div>`}
+  const cli=document.getElementById('cli-list');
+  if(cli){const l=filteredClients();document.getElementById('cli-count').textContent=`Mostrando ${l.length} ${l.length===1?'cliente':'clientes'}`;
+    cli.innerHTML=l.length?l.map(clientRow).join(''):`<div class="list-empty"><p>Ningún cliente coincide con estos criterios.</p><button class="btn" data-act="clearCli">Ver toda la cartera</button></div>`}
+  const ven=document.getElementById('ven-list');
+  if(ven){const l=filteredSales();document.getElementById('ven-count').textContent=`Mostrando ${l.length} ${l.length===1?'operación':'operaciones'}`;
+    ven.innerHTML=l.length?l.map(saleRow).join(''):`<div class="list-empty"><p>No hay operaciones registradas en este estado.</p><button class="btn primary" data-act="newSale">Registrar nueva operación</button></div>`}
+}
+
+/* ---------- Ventanas ---------- */
+let pending=null;
+function openModal(html){dlgBody.innerHTML=html;if(!dlg.open)dlg.showModal();dlgBody.scrollTop=0}
+function closeModal(){pending=null;if(dlg.open)dlg.close()}
+function confirmBox(title,msg,okLabel,fn,style){
+  pending=fn;
+  openModal(`<div class="m-pad"><h2 class="m-title">${esc(title)}</h2><p style="margin-top:10px">${esc(msg)}</p><div class="m-actions"><button class="btn ghost" data-act="closeModal">Volver</button><button class="btn ${style||'danger'}" data-act="confirmOk">${esc(okLabel)}</button></div></div>`);
+}
+let tt;
+function toast(msg){const host=dlg.open?dlg:document.body;if(toastEl.parentNode!==host)host.appendChild(toastEl);toastEl.textContent=msg;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('show'),2900)}
+
+const field=(label,name,val,o={})=>`<label class="field${o.full?' full':''}"><span>${label}</span><input name="${name}" type="${o.type||'text'}" value="${esc(val)}"${o.req?' required':''}${o.min!=null?` min="${o.min}"`:''}${o.max!=null?` max="${o.max}"`:''}${o.step?` step="${o.step}"`:''}${o.ph?` placeholder="${esc(o.ph)}"`:''}${o.dis?' disabled':''}${o.mode?` inputmode="${o.mode}"`:''}></label>`;
+const select=(label,name,val,list,o={})=>`<label class="field${o.full?' full':''}"><span>${label}</span><select name="${name}">${opts(list,val)}</select></label>`;
+const actions=(submit)=>`<p class="form-error" role="alert" hidden></p><div class="m-actions"><button type="button" class="btn ghost" data-act="closeModal">Cancelar</button><button class="btn primary" type="submit">${submit}</button></div>`;
+
+function viewVehicle(id){
+  const v=vehicle(id);if(!v)return;
+  const s=currentSale(v.id),admin=isAdmin();
+  const shareTxt=encodeURIComponent(`*Automotores Del Plata*\n${vehName(v)} ${v.version} (${v.anio})\n• Kilometraje: ${kms(v.km)}\n• Transmisión: ${v.transmision||'Manual'} · ${v.combustible||'Nafta'}\n• Precio de lista: ${money(v.precio)}\nConsultanos para coordinar prueba de manejo.`);
+  let box='';
+  if(s){
+    const c=client(s.clientId);
+    box=`<div class="note-box"><div style="display:flex;justify-content:space-between;width:100%;align-items:center"><strong>${s.estado==='reservada'?'Unidad Reservada':'Unidad Vendida'} (${esc(s.codigo||'OP')})</strong><button class="btn sm ghost" data-act="viewReceipt" data-id="${s.id}">${icon('doc',15)} Ver comprobante</button></div><span class="muted small">Cliente: <strong>${esc(c?c.nombre:'Eliminado')}</strong> · ${s.estado==='reservada'?`Seña de ${money(s.sena)} el ${fdate(s.fechaReserva)}`:`Liquidada por ${money(s.precio)} el ${fdate(s.fechaVenta)}`}. Ejecutivo: ${esc(userName(s.vendedorId))}.</span>${c&&canManage(s)?`<button class="btn sm" data-act="viewClient" data-id="${c.id}">Abrir ficha del cliente</button>`:''}</div>`;
+  }
+  let acts='';
+  if(v.estado==='disponible')acts=`<a class="btn wa" href="https://wa.me/?text=${shareTxt}" target="_blank" rel="noopener">${icon('share',15)} Compartir ficha</a><button class="btn" data-act="sellVehicle" data-id="${v.id}">Venta directa</button><button class="btn primary" data-act="reserveVehicle" data-id="${v.id}">Reservar con seña</button>`;
+  else if(v.estado==='reservado'&&s&&canManage(s))acts=`<button class="btn" data-act="cancelReserva" data-id="${s.id}">Cancelar reserva</button><button class="btn primary" data-act="confirmSale" data-id="${s.id}">Confirmar venta</button>`;
+  const adm=admin?`<span class="push"><button class="btn ghost" data-act="editVehicle" data-id="${v.id}">Editar</button>${v.estado==='disponible'?`<button class="btn ghost text-danger" data-act="deleteVehicle" data-id="${v.id}">Eliminar</button>`:''}</span>`:'';
+  openModal(`<div class="m-hero${v.estado==='vendido'?' is-sold':''}">${carArt(v)}<div class="m-hero-tags">${plate(v)}${vBadge(v)}</div></div>
+<div class="m-pad"><div class="m-title"><h2>${esc(vehName(v))}</h2><p class="muted">${esc(v.version)}</p></div>
+<div class="m-price-row"><span class="m-price num">${money(v.precio)}</span><span class="muted small">Precio contado / lista</span></div>
+<dl class="specs">
+<div><dt>Año / Modelo</dt><dd class="num">${v.anio}</dd></div>
+<div><dt>Kilometraje</dt><dd class="num">${kms(v.km)}</dd></div>
+<div><dt>Condición</dt><dd>${v.tipo==='0km'?'0 km':'Usado seleccionado'}</dd></div>
+<div><dt>Transmisión</dt><dd>${esc(v.transmision||'Manual')}</dd></div>
+<div><dt>Combustible</dt><dd>${esc(v.combustible||'Nafta')}</dd></div>
+<div><dt>Color</dt><dd>${esc(v.color)}</dd></div>
+<div><dt>Carrocería</dt><dd>${esc((CARROCERIAS.find(c=>c[0]===v.carroceria)||['','-'])[1])}</dd></div>
+<div><dt>Ingreso a stock</dt><dd>${fdateShort(v.ingreso)}${v.estado!=='vendido'?` (${daysSince(v.ingreso)} d)`:''}</dd></div>
+</dl>
+${box}${acts||adm?`<div class="m-actions">${adm}${acts}</div>`:''}</div>`);
+}
+
+function vehicleForm(v){
+  const e=v||{marca:'',modelo:'',version:'',anio:new Date().getFullYear(),tipo:'0km',km:0,color:'Blanco',carroceria:'sedan',transmision:'Automática',combustible:'Nafta',patente:'',precio:''};
+  openModal(`<form class="m-pad form" data-form="vehicle" data-id="${v?v.id:''}" novalidate><h2>${v?'Editar ficha de unidad':'Ingresar nueva unidad'}</h2><div class="fgrid">
+${field('Marca','marca',e.marca,{req:1,ph:'Ej: Toyota'})}${field('Modelo','modelo',e.modelo,{req:1,ph:'Ej: Corolla'})}
+${field('Versión / Equipamiento','version',e.version,{full:1,ph:'Ej: XEI 2.0 CVT'})}
+${field('Año','anio',e.anio,{type:'number',min:1980,max:new Date().getFullYear()+1,req:1})}${select('Condición','tipo',e.tipo,[['0km','0 km'],['usado','Usado']])}
+${field('Kilometraje','km',e.km,{type:'number',min:0,dis:e.tipo==='0km'})}${field('Dominio / Patente','patente',e.patente,{ph:'Ej: AE 384 KD'})}
+${select('Transmisión','transmision',e.transmision||'Manual',TRANSMISIONES.map(t=>[t,t]))}${select('Combustible','combustible',e.combustible||'Nafta',COMBUSTIBLES.map(c=>[c,c]))}
+${select('Color','color',e.color,Object.keys(COLORS).map(c=>[c,c]))}${select('Carrocería','carroceria',e.carroceria,CARROCERIAS)}
+${field('Precio de lista ($ ARS)','precio',e.precio,{type:'number',min:0,step:1000,req:1,full:1,mode:'numeric'})}
+<label class="field full"><span>Fotografía de la unidad</span><input type="file" name="foto" accept="image/*"><small class="muted">Opcional. Si no adjuntás imagen, se genera una vista previa con el color y silueta del vehículo.</small></label>
+</div>${actions(v?'Guardar cambios':'Incorporar al stock')}</form>`);
+}
+
+function saleForm(pre={}){
+  const u=me(),admin=isAdmin();
+  const vehs=db.vehicles.filter(v=>v.estado==='disponible');
+  if(!vehs.length)return openModal(`<div class="m-pad"><h2 class="m-title">Sin unidades disponibles</h2><p style="margin-top:10px">Para registrar una operación, primero ingresá una unidad al inventario o liberá una reserva activa.</p><div class="m-actions"><button class="btn primary" data-act="closeModal">Entendido</button></div></div>`);
+  const cls=visibleClients().filter(c=>c.estado!=='perdido');
+  if(!cls.length)return openModal(`<div class="m-pad"><h2 class="m-title">Primero cargá un cliente</h2><p style="margin-top:10px">Toda reserva o venta debe vincularse a un cliente registrado en la cartera.</p><div class="m-actions"><button class="btn ghost" data-act="closeModal">Volver</button><button class="btn primary" data-act="newClient">Alta de cliente</button></div></div>`);
+  const vid=pre.vehicleId&&vehicle(pre.vehicleId)?pre.vehicleId:vehs[0].id,tipo=pre.tipo||'reserva',pv=vehicle(vid).precio;
+  openModal(`<form class="m-pad form" data-form="sale" novalidate><h2>${tipo==='venta'?'Registrar venta directa':'Registrar operación'}</h2>
+<fieldset><legend>Modalidad de operación</legend><div class="seg"><label><input type="radio" name="tipo" value="reserva"${tipo==='reserva'?' checked':''}><span>Reserva con seña</span></label><label><input type="radio" name="tipo" value="venta"${tipo==='venta'?' checked':''}><span>Venta directa</span></label></div></fieldset>
+<div class="fgrid">${select('Unidad','vehicleId',vid,vehs.map(v=>[v.id,`${vehName(v)} ${v.anio} · ${v.patente||'0 km'}`]),{full:1})}
+${select('Cliente comprador','clientId',pre.clientId||cls[0].id,cls.map(c=>[c.id,c.nombre]),{full:1})}
+${admin?select('Ejecutivo asignado','vendedorId',pre.vendedorId||(pre.clientId&&client(pre.clientId)?client(pre.clientId).vendedorId:u.id),db.users.map(x=>[x.id,x.nombre])): `<input type="hidden" name="vendedorId" value="${u.id}">`}
+${select('Condición de pago','formaPago','Contado / Transferencia',FORMAS_PAGO.map(p=>[p,p]),{full:!admin})}
+${field('Precio acordado ($)','precio',pv,{type:'number',min:0,step:1000,req:1,mode:'numeric'})}${field('Importe de seña ($)','sena',Math.round(pv*0.05/100000)*100000,{type:'number',min:0,step:1000,mode:'numeric'})}
+</div>${actions('Confirmar operación')}</form>`);
+}
+
+function viewReceipt(id){
+  const s=db.sales.find(x=>x.id===id);if(!s)return;
+  const v=vehicle(s.vehicleId),c=client(s.clientId);
+  const saldo=Math.max(0,Number(s.precio)-Number(s.sena||0));
+  openModal(`<div class="m-pad">
+<div class="m-title"><h2>${s.estado==='vendida'?'Boleto / Liquidación de Venta':'Comprobante de Reserva de Unidad'}</h2><p class="muted small">Automotores Del Plata · CUIT 30-71489230-9 · Casa Central</p></div>
+<div class="receipt-box num">
+  <div class="receipt-head"><div><strong>Operación ${esc(s.codigo||'OP-2026')}</strong><div class="muted small">Fecha: ${fdate(s.estado==='vendida'?s.fechaVenta:s.fechaReserva)}</div></div>${badge(s.estado,ESTADOS_S[s.estado])}</div>
+  <div class="receipt-row"><span class="muted">Comprador:</span><strong>${esc(c?c.nombre:'-')}</strong></div>
+  <div class="receipt-row"><span class="muted">Unidad:</span><strong>${esc(vehName(v))} ${v?`${esc(v.version)} (${v.anio})`:''}</strong></div>
+  <div class="receipt-row"><span class="muted">Dominio:</span><span>${v&&v.patente?esc(v.patente):'0 km a patentar'}</span></div>
+  <div class="receipt-row"><span class="muted">Condición de pago:</span><span>${esc(s.formaPago||'Contado / Transferencia')}</span></div>
+  <div class="receipt-row"><span class="muted">Ejecutivo interviniente:</span><span>${esc(userName(s.vendedorId))}</span></div>
+  <div style="border-top:1px solid var(--line);padding-top:8px;display:grid;gap:6px">
+    <div class="receipt-row"><span class="muted">Precio final acordado:</span><strong>${money(s.precio)}</strong></div>
+    <div class="receipt-row"><span class="muted">Seña recibida:</span><span>${money(s.sena||0)}</span></div>
+    <div class="receipt-row"><strong>${s.estado==='vendida'?'Saldo cancelado:':'Saldo a integrar:'}</strong><strong>${money(s.estado==='vendida'?0:saldo)}</strong></div>
+  </div>
+</div>
+<div class="m-actions"><button class="btn" onclick="window.print()">Imprimir</button><button class="btn primary" data-act="closeModal">Cerrar</button></div>
+</div>`);
+}
+
+function clientForm(c){
+  const admin=isAdmin(),u=me();
+  const e=c||{nombre:'',telefono:'',email:'',origen:'Showroom',interes:'',vendedorId:u.id,estado:'nuevo'};
+  openModal(`<form class="m-pad form" data-form="client" data-id="${c?c.id:''}" novalidate><h2>${c?'Editar datos del cliente':'Nuevo cliente / lead'}</h2><div class="fgrid">
+${field('Nombre y apellido','nombre',e.nombre,{req:1,full:1,ph:'Ej: Juan Pérez'})}
+${field('Teléfono / WhatsApp','telefono',e.telefono,{type:'tel',ph:'Ej: 11 5523-8841'})}${field('Correo electrónico','email',e.email,{type:'email',ph:'cliente@mail.com'})}
+${select('Canal de ingreso','origen',e.origen,ORIGENES.map(o=>[o,o]))}${select('Estado comercial','estado',e.estado,Object.entries(ESTADOS_C))}
+${field('Vehículo o búsqueda de interés','interes',e.interes,{full:1,ph:'Ej: SUV usada hasta $ 35 M o entrega usado'})}
+${admin?select('Ejecutivo asignado','vendedorId',e.vendedorId,db.users.map(x=>[x.id,x.nombre]),{full:1}):`<input type="hidden" name="vendedorId" value="${esc(e.vendedorId)}">`}
+</div>${actions(c?'Guardar cambios':'Registrar cliente')}</form>`);
+}
+
+function viewClient(id){
+  const c=client(id);if(!c)return;
+  const admin=isAdmin(),ops=db.sales.filter(s=>s.clientId===id).sort((a,b)=>new Date(b.fechaReserva)-new Date(a.fechaReserva));
+  const waMsg=encodeURIComponent(`Hola ${c.nombre.split(' ')[0]}, te saluda ${me().nombre.split(' ')[0]} de Automotores Del Plata. ¿Cómo estás?`);
+  const tel=c.telefono?`<a class="btn sm" href="tel:${esc(c.telefono.replace(/[^\d+]/g,''))}">Llamar</a><a class="btn sm wa" href="https://wa.me/${waNum(c.telefono)}?text=${waMsg}" target="_blank" rel="noopener">WhatsApp</a>`:'';
+  const mail=c.email?`<a class="btn sm" href="mailto:${esc(c.email)}">Email</a>`:'';
+  openModal(`<div class="m-pad"><div class="c-head"><span class="avatar lg">${initials(c.nombre)}</span><div><h2>${esc(c.nombre)}</h2><p class="muted small">Alta el ${fdate(c.creado)} · Canal: ${esc(c.origen)}</p></div></div>
+${tel||mail?`<div class="c-contact">${tel}${mail}</div>`:''}
+<div class="fgrid"><label class="field"><span>Estado comercial</span><select data-change="clientEstado" data-id="${c.id}">${opts(Object.entries(ESTADOS_C),c.estado)}</select></label>
+${admin?`<label class="field"><span>Ejecutivo asignado</span><select data-change="clientVendedor" data-id="${c.id}">${opts(db.users.map(x=>[x.id,x.nombre]),c.vendedorId)}</select></label>`:`<div class="field"><span>Ejecutivo asignado</span><p class="static">${esc(userName(c.vendedorId))}</p></div>`}</div>
+<dl class="specs" style="margin-top:16px"><div><dt>Teléfono</dt><dd>${esc(c.telefono||'Sin cargar')}</dd></div><div><dt>Email</dt><dd>${esc(c.email||'Sin cargar')}</dd></div><div class="full"><dt>Búsqueda / Interés</dt><dd>${esc(c.interes||'Sin especificar')}</dd></div></dl>
+${ops.length?`<h3 class="sec">Operaciones vinculadas</h3><ul class="ops">${ops.map(s=>`<li><span class="stack"><strong>${esc(vehName(vehicle(s.vehicleId)))}</strong><span class="muted small num">${money(s.precio)} · ${esc(s.codigo||'OP')}</span></span>${badge(s.estado,ESTADOS_S[s.estado])}</li>`).join('')}</ul>`:''}
+<h3 class="sec">Bitácora de seguimiento</h3>
+<form class="note-form" data-form="note" data-id="${c.id}"><textarea name="texto" rows="2" placeholder="Registrar llamado, cotización enviada, tasación de usado o visita al salón..." aria-label="Nueva nota" required></textarea><button class="btn primary sm" type="submit">Guardar nota</button></form>
+${c.notas.length?`<ol class="timeline">${c.notas.slice().reverse().map(n=>`<li><p>${esc(n.texto)}</p><span class="when">${fdateShort(n.fecha)} · ${esc(userName(n.autor))}</span></li>`).join('')}</ol>`:`<p class="muted small">Sin gestiones registradas. Al guardar la primera nota el lead pasa automáticamente a Contactado.</p>`}
+<div class="m-actions"><button class="btn ghost push" data-act="editClient" data-id="${c.id}">Editar ficha</button>${ABIERTOS.includes(c.estado)?`<button class="btn primary" data-act="newSaleFor" data-id="${c.id}">Reservar / Vender unidad</button>`:''}</div></div>`);
+}
+
+function userForm(){
+  openModal(`<form class="m-pad form" data-form="user" novalidate><h2>Alta de usuario interno</h2><div class="fgrid">
+${field('Nombre y apellido','nombre','',{req:1,full:1,ph:'Ej: Carlos Méndez'})}
+${field('Cargo / Puesto','cargo','Ejecutivo de Ventas',{ph:'Ej: Ejecutivo de Ventas'})}
+${select('Nivel de permisos','rol','vendedor',[['vendedor','Ejecutivo de Ventas'],['admin','Administración / Gerencia']])}
+${field('Email corporativo','email','',{type:'email',req:1,full:1,ph:'carlos@automotoresdelplata.com.ar'})}
+</div>${actions('Crear usuario')}</form>`);
+}
+
+/* ---------- Acciones ---------- */
+function resizeImage(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();r.onerror=()=>rej(new Error('No se pudo leer la imagen.'));
+    r.onload=()=>{const img=new Image();img.onload=()=>{const max=960,sc=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',.82))};img.onerror=()=>rej(new Error('El archivo seleccionado no es una imagen válida.'));img.src=r.result};
+    r.readAsDataURL(file);
+  });
+}
+function addNote(c,texto){c.notas.push({fecha:nowISO(),autor:db.session,texto})}
+
+function confirmSale(id){
+  const s=db.sales.find(x=>x.id===id);if(!s)return;const v=vehicle(s.vehicleId),c=client(s.clientId);
+  confirmBox('Liquidar y confirmar venta',`La unidad ${vehName(v)} pasará a estado Vendido a nombre de ${c?c.nombre:'el cliente'} por ${money(s.precio)}.`,'Confirmar venta',()=>{
+    s.estado='vendida';s.fechaVenta=nowISO();if(v)v.estado='vendido';if(c){c.estado='ganado';addNote(c,`Venta liquidada (${s.codigo||'OP'}): ${vehName(v)} por ${money(s.precio)}.`)}
+    save();closeModal();render();toast('Venta confirmada y unidad dada de baja del stock');
+  },'primary');
+}
+function cancelReserva(id){
+  const s=db.sales.find(x=>x.id===id);if(!s)return;const v=vehicle(s.vehicleId),c=client(s.clientId);
+  confirmBox('Anular reserva',`La unidad ${vehName(v)} volverá a estar Disponible en el playón. Recordá gestionar administrativamente la devolución o imputación de la seña de ${money(s.sena)}.`,'Anular reserva',()=>{
+    s.estado='cancelada';if(v)v.estado='disponible';if(c){c.estado='contactado';addNote(c,`Reserva anulada (${s.codigo||'OP'}): ${vehName(v)}.`)}
+    save();closeModal();render();toast('Reserva anulada · Unidad disponible nuevamente');
+  });
+}
+
+const ACT={
+  go:id=>{closeModal();ui.view=id;render();window.scrollTo(0,0)},
+  login:id=>{db.session=id;ui.view='dashboard';save();render();window.scrollTo(0,0)},
+  logout:()=>{closeModal();db.session=null;save();render()},
+  resetDemo:()=>confirmBox('Restaurar datos de demostración','Se descartarán todas las modificaciones locales y se restablecerá el inventario, cartera y operaciones iniciales.','Restaurar demo',()=>{const s=db.session;db=seed();db.session=db.users.some(u=>u.id===s)?s:null;save();closeModal();render();toast('Base de datos de ejemplo restaurada')}),
+  userMenu:()=>{const u=me();openModal(`<div class="m-pad"><div class="c-head"><span class="avatar lg">${initials(u.nombre)}</span><div><h2>${esc(u.nombre)}</h2><p class="muted small">${esc(u.cargo||(u.rol==='admin'?'Administración':'Ejecutivo de Ventas'))}</p></div></div><div style="display:grid;gap:8px"><button class="btn" data-act="logout">${icon('logout',17)} Cambiar de usuario</button><button class="btn" data-act="resetDemo">${icon('reset',17)} Reiniciar datos de ejemplo</button></div></div>`)},
+  closeModal:()=>closeModal(),
+  confirmOk:()=>{const f=pending;pending=null;if(f)f()},
+  setFilter:(id,t)=>{setPath(t.dataset.key,t.dataset.val);t.parentElement.querySelectorAll('[data-act="setFilter"]').forEach(b=>b.setAttribute('aria-pressed',String(b===t)));refreshLists()},
+  clearInv:()=>{ui.inv={q:'',tipo:'todos',estado:'todos',orden:'recientes'};render()},
+  clearCli:()=>{ui.cli={q:'',estado:'todos',origen:'todos'};render()},
+  viewVehicle:id=>viewVehicle(id),
+  newVehicle:()=>vehicleForm(),
+  editVehicle:id=>vehicleForm(vehicle(id)),
+  deleteVehicle:id=>{const v=vehicle(id);if(db.sales.some(s=>s.vehicleId===id&&s.estado!=='cancelada'))return toast('Esta unidad posee operaciones asociadas y no puede eliminarse.');
+    confirmBox('Dar de baja unidad',`${vehName(v)} (${v.anio}) se eliminará permanentemente del inventario.`,'Eliminar unidad',()=>{db.vehicles=db.vehicles.filter(x=>x.id!==id);save();closeModal();render();toast('Unidad eliminada del inventario')})},
+  reserveVehicle:id=>saleForm({vehicleId:id,tipo:'reserva'}),
+  sellVehicle:id=>saleForm({vehicleId:id,tipo:'venta'}),
+  viewReceipt:id=>viewReceipt(id),
+  confirmSale:id=>confirmSale(id),
+  cancelReserva:id=>cancelReserva(id),
+  newSale:()=>saleForm(),
+  newSaleFor:id=>saleForm({clientId:id}),
+  newClient:()=>clientForm(),
+  editClient:id=>clientForm(client(id)),
+  viewClient:id=>viewClient(id),
+  newUser:()=>userForm(),
+  deleteUser:id=>{const u=db.users.find(x=>x.id===id);if(!u)return;
+    if(db.clients.some(c=>c.vendedorId===id))return toast(`Reasigná los clientes de ${u.nombre} antes de darlo de baja.`);
+    confirmBox('Dar de baja usuario',`${u.nombre} perderá el acceso al sistema. Su historial de operaciones cerradas se conservará.`,'Confirmar baja',()=>{db.users=db.users.filter(x=>x.id!==id);save();closeModal();render();toast('Usuario dado de baja')})}
+};
+
+const CHANGE={
+  clientEstado:(id,val)=>{const c=client(id);c.estado=val;save();render();toast('Estado comercial actualizado')},
+  clientVendedor:(id,val)=>{const c=client(id);c.vendedorId=val;save();render();toast(`Cliente asignado a ${userName(val)}`)},
+  userRol:(id,val)=>{const u=db.users.find(x=>x.id===id);u.rol=val;save();render();toast('Nivel de permisos actualizado')}
+};
+
+const FORMS={
+  vehicle:async(d,f)=>{
+    const id=f.dataset.id;
+    if(!d.marca.trim()||!d.modelo.trim())throw new Error('Completá la marca y el modelo de la unidad.');
+    const anio=+d.anio,precio=+d.precio;
+    if(!(anio>=1980&&anio<=new Date().getFullYear()+1))throw new Error('Verificá el año de fabricación.');
+    if(!(precio>0))throw new Error('Ingresá un precio de lista válido.');
+    const file=f.querySelector('input[name=foto]').files[0];const foto=file?await resizeImage(file):null;
+    const data={marca:d.marca.trim(),modelo:d.modelo.trim(),version:d.version.trim(),anio,tipo:d.tipo,km:d.tipo==='0km'?0:Math.max(0,+d.km||0),color:d.color,carroceria:d.carroceria,transmision:d.transmision,combustible:d.combustible,patente:d.patente.trim().toUpperCase(),precio};
+    if(id){const v=vehicle(id);Object.assign(v,data);if(foto)v.foto=foto;save();render();viewVehicle(id);toast('Ficha de unidad actualizada')}
+    else{db.vehicles.unshift(Object.assign({id:uid('v')},data,{estado:'disponible',foto,ingreso:nowISO()}));save();closeModal();render();toast('Unidad incorporada al inventario')}
+  },
+  sale:d=>{
+    const v=vehicle(d.vehicleId),c=client(d.clientId);
+    if(!v||!c)throw new Error('Seleccioná una unidad y un cliente.');
+    if(v.estado!=='disponible')throw new Error('La unidad seleccionada ya no se encuentra disponible.');
+    const precio=+d.precio,sena=+d.sena||0;
+    if(!(precio>0))throw new Error('Ingresá el precio acordado.');
+    if(sena<0||sena>precio)throw new Error('El importe de seña debe estar entre $ 0 y el precio acordado.');
+    const venta=d.tipo==='venta',now=nowISO();
+    const codigo='OP-2026-'+String(db.sales.length+12).padStart(3,'0');
+    db.sales.push({id:uid('s'),codigo,vehicleId:v.id,clientId:c.id,vendedorId:d.vendedorId,precio,sena,formaPago:d.formaPago||'Contado / Transferencia',estado:venta?'vendida':'reservada',fechaReserva:now,fechaVenta:venta?now:null});
+    v.estado=venta?'vendido':'reservado';c.estado=venta?'ganado':'negociacion';
+    addNote(c,venta?`Venta liquidada (${codigo}): ${vehName(v)} por ${money(precio)} (${d.formaPago}).`:`Reserva tomada (${codigo}): ${vehName(v)} con seña de ${money(sena)}.`);
+    save();closeModal();render();toast(venta?'Venta registrada correctamente':'Reserva registrada · Unidad bloqueada en playón');
+  },
+  client:(d,f)=>{
+    const id=f.dataset.id,nombre=d.nombre.trim();
+    if(!nombre)throw new Error('Ingresá el nombre y apellido del cliente.');
+    if(!d.telefono.trim()&&!d.email.trim())throw new Error('Cargá al menos un teléfono o correo electrónico de contacto.');
+    if(d.email.trim()&&!/^\S+@\S+\.\S+$/.test(d.email.trim()))throw new Error('Verificá el formato del correo electrónico.');
+    const data={nombre,telefono:d.telefono.trim(),email:d.email.trim(),origen:d.origen,estado:d.estado,interes:d.interes.trim(),vendedorId:d.vendedorId};
+    if(id){Object.assign(client(id),data);save();render();viewClient(id);toast('Ficha de cliente actualizada')}
+    else{const c=Object.assign({id:uid('c')},data,{creado:nowISO(),notas:[]});db.clients.push(c);save();render();viewClient(c.id);toast('Cliente dado de alta en cartera')}
+  },
+  note:(d,f)=>{
+    const c=client(f.dataset.id),t=(d.texto||'').trim();
+    if(!t)throw new Error('Escribí el detalle de la gestión antes de guardar.');
+    addNote(c,t);let msg='Gestión registrada en bitácora';
+    if(c.estado==='nuevo'){c.estado='contactado';msg='Nota guardada · El lead pasó a estado Contactado'}
+    save();render();viewClient(c.id);toast(msg);
+  },
+  user:d=>{
+    const nombre=d.nombre.trim(),email=d.email.trim().toLowerCase(),cargo=(d.cargo||'').trim()||(d.rol==='admin'?'Administración':'Ejecutivo de Ventas');
+    if(!nombre||!/^\S+@\S+\.\S+$/.test(email))throw new Error('Completá el nombre y un correo electrónico válido.');
+    if(db.users.some(u=>u.email.toLowerCase()===email))throw new Error('Ya existe un usuario registrado con ese correo.');
+    db.users.push({id:uid('u'),nombre,cargo,email,rol:d.rol});save();closeModal();render();toast('Usuario interno creado');
+  }
+};
+
+/* ---------- Eventos ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  const fn=ACT[t.dataset.act];if(!fn)return;e.preventDefault();fn(t.dataset.id,t);
+});
+document.addEventListener('input',e=>{
+  const t=e.target.closest('[data-filter]');if(!t)return;setPath(t.dataset.filter,t.value);refreshLists();
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.change&&CHANGE[t.dataset.change])return CHANGE[t.dataset.change](t.dataset.id,t.value);
+  const f=t.closest&&t.closest('form[data-form]');if(!f)return;
+  if(f.dataset.form==='sale'&&t.name==='vehicleId'){const v=vehicle(t.value);if(v){f.elements.precio.value=v.precio;f.elements.sena.value=Math.round(v.precio*0.05/100000)*100000}}
+  if(f.dataset.form==='vehicle'&&t.name==='tipo'){const km=f.elements.km;km.disabled=t.value==='0km';if(t.value==='0km')km.value=0}
+});
+document.addEventListener('submit',async e=>{
+  const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();
+  const err=f.querySelector('.form-error');if(err)err.hidden=true;
+  const fd=new FormData(f),d={};fd.forEach((v,k)=>{if(typeof v==='string')d[k]=v});
+  const kind=f.dataset.form;if(kind==='vehicle'&&d.km==null)d.km='0';
+  try{await FORMS[kind](d,f)}catch(ex){const m=ex&&ex.message?ex.message:'No se pudo guardar.';if(err){err.textContent=m;err.hidden=false}else toast(m)}
+});
+dlg.addEventListener('click',e=>{if(e.target===dlg)closeModal()});
+dlg.addEventListener('close',()=>{pending=null});
+
+render();
+})();
+</script>
+</body>
+</html>
